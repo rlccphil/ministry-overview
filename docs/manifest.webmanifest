@@ -1,0 +1,25 @@
+{
+  "name": "RLCC Ministry Overview and Reviewer",
+  "short_name": "Ministry Reviewer",
+  "description": "A guided walk through the RLCC ministry pathway: REACH, CORE, and LEAD. For lay leaders, interns, and pastors.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f7f5ef",
+  "theme_color": "#365233",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
