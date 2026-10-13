@@ -1,0 +1,889 @@
+<script>
+/* ===========================================================================
+ * RLCC Ministry Overview and Reviewer — Client.html
+ *
+ * Vanilla JS, no build step. All rules are re-checked on the server, so this
+ * code is about clarity and guidance rather than security.
+ * ======================================================================== */
+(function () {
+  'use strict';
+
+  /* -----------------------------------------------------------------------
+   * Small helpers
+   * -------------------------------------------------------------------- */
+
+  function esc(value) {
+    if (value === null || value === undefined) return '';
+    return String(value)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function byId(id) { return document.getElementById(id); }
+
+  function plural(count, singular, pluralWord) {
+    return count + ' ' + (count === 1 ? singular : (pluralWord || singular + 's'));
+  }
+
+  var STORE_KEY = 'rlcc.mor.email';
+
+  /* Backend bridge: google.script.run in Apps Script, a local mock in the
+     generated preview build. Both return a promise. */
+  function api(name, args) {
+    return new Promise(function (resolve, reject) {
+      if (window.RLCC_PREVIEW) {
+        window.RLCC_PREVIEW.call(name, args || []).then(resolve, reject);
+        return;
+      }
+      var runner = google.script.run
+        .withSuccessHandler(resolve)
+        .withFailureHandler(function (err) {
+          reject(err && err.message ? err.message : String(err));
+        });
+      runner[name].apply(runner, args || []);
+    });
+  }
+
+  /* Serialises writes so two quick clicks cannot race each other. */
+  var queue = Promise.resolve();
+  function enqueue(task) {
+    queue = queue.then(task, task);
+    return queue;
+  }
+
+  /* -----------------------------------------------------------------------
+   * State
+   * -------------------------------------------------------------------- */
+
+  var S = {
+    config: null,
+    curriculum: null,
+    communities: [],
+    user: null,
+    progress: {},
+    notes: {},
+    view: 'loading',
+    stepId: null,
+    formError: '',
+    formNotice: '',
+    initError: '',
+    formValues: { name: '', community: '', email: '' }
+  };
+
+  var index = null;
+
+  function buildIndex(curriculum) {
+    var idx = { areas: [], steps: [], stepById: {}, substepById: {}, totalSteps: 0 };
+    var globalOrder = 0;
+
+    (curriculum.areas || []).forEach(function (area) {
+      var areaCopy = {
+        id: area.id, code: area.code, name: area.name,
+        accent: area.accent || '#365233', tint: area.tint || '#f6f8f5',
+        summary: area.summary || '', steps: []
+      };
+
+      (area.steps || []).forEach(function (raw, areaIndex) {
+        var step = {
+          id: raw.id,
+          areaId: area.id,
+          areaCode: area.code,
+          areaName: area.name,
+          action: raw.action || '',
+          title: raw.title,
+          summary: raw.summary || '',
+          proof: raw.proof || '',
+          reflectionPrompt: raw.reflectionPrompt || '',
+          orderInArea: raw.order || (areaIndex + 1),
+          stepsInArea: area.steps.length,
+          globalOrder: globalOrder++,
+          substeps: (raw.substeps || []).map(function (sub, subIndex) {
+            return {
+              id: sub.id, stepId: raw.id, letter: sub.letter,
+              label: sub.label, apply: sub.apply || '', orderInStep: subIndex + 1
+            };
+          })
+        };
+
+        step.substeps.forEach(function (sub) { idx.substepById[sub.id] = sub; });
+        areaCopy.steps.push(step);
+        idx.steps.push(step);
+        idx.stepById[step.id] = step;
+      });
+
+      idx.areas.push(areaCopy);
+    });
+
+    idx.totalSteps = idx.steps.length;
+    return idx;
+  }
+
+  function areaOfStep(stepId) {
+    var step = index.stepById[stepId];
+    if (!step) return null;
+    for (var i = 0; i < index.areas.length; i++) {
+      if (index.areas[i].id === step.areaId) return index.areas[i];
+    }
+    return null;
+  }
+
+  function isDone(substepId) {
+    var rec = S.progress[substepId];
+    return !!(rec && rec.status === 'done');
+  }
+
+  function isComplete(stepId) {
+    var rec = S.progress[stepId];
+    return !!(rec && rec.status === 'complete');
+  }
+
+  function noteFor(stepId) {
+    if (Object.prototype.hasOwnProperty.call(S.notes, stepId)) return S.notes[stepId];
+    var rec = S.progress[stepId];
+    return (rec && rec.note) ? rec.note : '';
+  }
+
+  /* Ordered state for every step: complete | open | locked. */
+  function stepStates() {
+    var states = [];
+    var previousComplete = true;
+
+    index.steps.forEach(function (step, i) {
+      var complete = isComplete(step.id);
+      var unlocked = i === 0 || previousComplete || S.config.enforceSequence === false;
+      states.push({
+        step: step,
+        complete: complete,
+        state: complete ? 'complete' : (unlocked ? 'open' : 'locked'),
+        completedAt: complete ? ((S.progress[step.id] || {}).updatedAt || '') : ''
+      });
+      previousComplete = complete;
+    });
+
+    return states;
+  }
+
+  function stateOf(stepId) {
+    var states = stepStates();
+    for (var i = 0; i < states.length; i++) {
+      if (states[i].step.id === stepId) return states[i];
+    }
+    return null;
+  }
+
+  function overallProgress(states) {
+    var completed = states.filter(function (s) { return s.complete; }).length;
+    return {
+      completed: completed,
+      total: states.length,
+      percent: states.length ? Math.round((completed / states.length) * 100) : 0,
+      finished: completed === states.length
+    };
+  }
+
+  function substepsDone(step) {
+    return step.substeps.filter(function (sub) { return isDone(sub.id); }).length;
+  }
+
+  function nextStepAfter(stepId) {
+    var step = index.stepById[stepId];
+    if (!step) return null;
+    return index.steps[step.globalOrder + 1] || null;
+  }
+
+  function previousStepBefore(stepId) {
+    var step = index.stepById[stepId];
+    if (!step || step.globalOrder === 0) return null;
+    return index.steps[step.globalOrder - 1] || null;
+  }
+
+  function readiness(step) {
+    var missing = step.substeps
+      .filter(function (sub) { return !isDone(sub.id); })
+      .map(function (sub) { return sub.letter; });
+    var note = noteFor(step.id).trim();
+    var min = S.config.requireStepReflection ? (S.config.minReflectionLength || 0) : 0;
+    var noteOk = !S.config.requireStepReflection || note.length >= min;
+    return {
+      missing: missing,
+      noteOk: noteOk,
+      ready: missing.length === 0 && noteOk
+    };
+  }
+
+  function shortLabel(step) {
+    return step.areaCode + ' · Step ' + step.orderInArea + ' — ' + step.title;
+  }
+
+  /* -----------------------------------------------------------------------
+   * Rendering
+   * -------------------------------------------------------------------- */
+
+  function render() {
+    var app = byId('app');
+    if (!app) return;
+
+    if (!index || !S.config) {
+      app.innerHTML = '<div class="loading"><div class="spinner"></div>' +
+        (S.formError ? esc(S.formError) : 'Loading the pathway…') + '</div>';
+      return;
+    }
+
+    if (S.view === 'gate') { app.innerHTML = gateHtml(); return; }
+    if (S.view === 'step') { app.innerHTML = stepViewHtml(); return; }
+    app.innerHTML = dashboardHtml();
+  }
+
+  function shell(topbarProgress, inner) {
+    var user = S.user || {};
+    return '' +
+      '<header class="topbar">' +
+        '<div class="topbar-inner">' +
+          '<div class="brand">' +
+            '<div class="brand-mark">RLCC</div>' +
+            '<div class="brand-text">' +
+              '<p class="brand-org">' + esc(S.config.orgName) + '</p>' +
+              '<p class="brand-title">Ministry Overview &amp; Reviewer</p>' +
+            '</div>' +
+          '</div>' +
+          '<div class="topbar-right">' +
+            '<div class="user-chip">' +
+              '<strong>' + esc(user.name || '') + '</strong>' +
+              '<span>' + esc(user.community || '') + ' · ' + esc(user.email || '') + '</span>' +
+            '</div>' +
+            '<button type="button" class="btn-signout" data-act="signout">Sign out</button>' +
+          '</div>' +
+        '</div>' +
+        topbarProgress +
+      '</header>' +
+      inner +
+      '<p class="footer-note">' + esc(S.config.orgName) +
+        ' · Ministry Overview &amp; Reviewer v' + esc(S.config.version || '') +
+        (S.config.leaderContact ? ' · Questions? <a href="mailto:' + esc(S.config.leaderContact) + '">' + esc(S.config.leaderContact) + '</a>' : '') +
+      '</p>';
+  }
+
+  /* ---------------- registration gate ---------------- */
+
+  function gateHtml() {
+    var c = S.config;
+    var f = S.formValues;
+
+    var pillars = index.areas.map(function (area) {
+      return '<div class="pillar" style="--accent:' + esc(area.accent) + '">' +
+        '<div class="code">' + esc(area.code) + '</div>' +
+        '<div class="name">' + esc(area.name) + '</div>' +
+      '</div>';
+    }).join('');
+
+    var options = (S.communities || []).map(function (value) {
+      return '<option value="' + esc(value) + '"></option>';
+    }).join('');
+
+    return '' +
+      '<div class="gate">' +
+        '<div class="card">' +
+          '<p class="area-code" style="--accent:#365233">' + esc(c.orgName) + '</p>' +
+          '<h1>Ministry Overview &amp; Reviewer</h1>' +
+          '<p class="lede">A guided walk through our ministry pathway. Work each step in order, ' +
+            'apply every sub-step, and record what you did. Steps unlock one at a time.</p>' +
+          '<div class="pillars">' + pillars + '</div>' +
+          (S.initError ? '<div class="banner warn" style="margin-top:18px"><span class="icon">!</span><div>' +
+            'The data sheet could not be opened: ' + esc(S.initError) + '</div></div>' : '') +
+          (S.formError ? '<div class="banner error" style="margin-top:18px"><span class="icon">!</span><div>' +
+            esc(S.formError) + '</div></div>' : '') +
+          (S.formNotice ? '<div class="banner ok" style="margin-top:18px"><span class="icon">✓</span><div>' +
+            esc(S.formNotice) + '</div></div>' : '') +
+          '<form id="register-form" style="margin-top:20px">' +
+            '<div class="grid-2">' +
+              fieldHtml('name', 'Full name', f.name, 'text', 'Juan dela Cruz') +
+              fieldHtml('community', 'Community', f.community, 'text', 'e.g. RLCC Ortigas, Circle — Men of Valor') +
+            '</div>' +
+            '<datalist id="community-list">' + options + '</datalist>' +
+            '<div style="margin-top:14px">' +
+              fieldHtml('email', 'Email address', f.email, 'email', 'you@example.com') +
+            '</div>' +
+            '<div class="btn-row" style="margin-top:20px">' +
+              '<button type="submit" class="btn btn-primary">Begin the pathway</button>' +
+            '</div>' +
+          '</form>' +
+          '<p class="fineprint">Your name, community, and email are recorded in a private ' +
+            'spreadsheet so your pastor or mentor can walk with you. Already registered? ' +
+            'Enter the same email and you will pick up where you left off.</p>' +
+        '</div>' +
+      '</div>';
+  }
+
+  function fieldHtml(name, label, value, type, placeholder) {
+    return '<div class="field">' +
+      '<label for="field-' + name + '">' + esc(label) + '</label>' +
+      '<input id="field-' + name + '" name="' + name + '" type="' + type + '" ' +
+        'value="' + esc(value) + '" placeholder="' + esc(placeholder) + '" ' +
+        (name === 'community' ? 'list="community-list" ' : '') +
+        'autocomplete="' + (name === 'email' ? 'email' : 'on') + '" required>' +
+    '</div>';
+  }
+
+  /* ---------------- dashboard ---------------- */
+
+  function dashboardHtml() {
+    var states = stepStates();
+    var overall = overallProgress(states);
+    var current = null;
+    for (var i = 0; i < states.length; i++) {
+      if (states[i].state === 'open') { current = states[i]; break; }
+    }
+
+    var hero = '<div class="card hero">' +
+      '<div class="hero-main">' +
+        '<h1>' + (overall.finished ? 'You have completed the whole pathway' : 'Where you are right now') + '</h1>' +
+        '<p>' + esc(S.curriculum.intro || '') + '</p>' +
+      '</div>' +
+      '<div class="hero-figure">' +
+        '<div class="big">' + overall.completed + ' / ' + overall.total + '</div>' +
+        '<div class="small">steps completed</div>' +
+        '<div class="bar" style="margin-top:10px"><span style="width:' + overall.percent + '%"></span></div>' +
+      '</div>' +
+    '</div>';
+
+    var currentBlock = '';
+    if (current) {
+      currentBlock = '<div class="banner info" style="margin-top:16px">' +
+        '<span class="icon">▶</span><div><strong>Current step:</strong> ' + esc(shortLabel(current.step)) +
+        ' · ' + plural(substepsDone(current.step), 'sub-step') + ' of ' + current.step.substeps.length + ' applied' +
+        '</div></div>';
+    } else if (overall.finished) {
+      currentBlock = '<div class="banner ok" style="margin-top:16px">' +
+        '<span class="icon">✓</span><div>Every step of REACH · CORE · LEAD is complete. Review any step, ' +
+        'or ask your leader about what comes next.</div></div>';
+    }
+
+    var areas = index.areas.map(function (area) {
+      return areaCardHtml(area, states);
+    }).join('');
+
+    return shell(
+      '<div class="progress-strip">' +
+        '<span>' + overall.completed + ' of ' + overall.total + ' steps complete</span>' +
+        '<span class="bar on-dark"><span style="width:' + overall.percent + '%"></span></span>' +
+        '<span>' + overall.percent + '%</span>' +
+      '</div>',
+      '<div class="wrap">' + hero + currentBlock +
+        '<div class="section-title"><h2>The pathway</h2>' +
+          '<span class="hint">A step opens only after the step before it is complete.</span></div>' +
+        areas +
+      '</div>'
+    );
+  }
+
+  function areaCardHtml(area, states) {
+    var areaStates = states.filter(function (s) { return s.step.areaId === area.id; });
+    var done = areaStates.filter(function (s) { return s.complete; }).length;
+    var percent = areaStates.length ? Math.round((done / areaStates.length) * 100) : 0;
+
+    var rows = areaStates.map(function (state) {
+      return stepRowHtml(state, area);
+    }).join('');
+
+    return '<section class="card area" style="--accent:' + esc(area.accent) + ';--tint:' + esc(area.tint) + '">' +
+      '<div class="area-head">' +
+        '<div style="flex:1 1 280px;min-width:0">' +
+          '<p class="area-code">' + esc(area.code) + '</p>' +
+          '<h3>' + esc(area.name) + '</h3>' +
+          '<p>' + esc(area.summary) + '</p>' +
+        '</div>' +
+        '<div class="area-progress">' +
+          '<div class="pct">' + percent + '%</div>' +
+          '<div class="count">' + done + ' of ' + areaStates.length + ' steps</div>' +
+          '<div class="bar mini"><span style="width:' + percent + '%"></span></div>' +
+        '</div>' +
+      '</div>' + rows + '</section>';
+  }
+
+  function stepRowHtml(state, area) {
+    var step = state.step;
+    var applied = substepsDone(step);
+    var chip, action, detail;
+
+    if (state.state === 'complete') {
+      chip = '<span class="chip complete">✓ Complete</span>';
+      action = 'Review →';
+      detail = 'Completed ' + esc(state.completedAt || '');
+    } else if (state.state === 'open') {
+      chip = '<span class="chip open">In progress</span>';
+      action = applied ? 'Continue →' : 'Start →';
+      detail = applied + ' of ' + step.substeps.length + ' sub-steps applied';
+    } else {
+      chip = '<span class="chip locked">🔒 Locked</span>';
+      action = '';
+      var previous = previousStepBefore(step.id);
+      detail = 'Opens after ' + esc(previous ? shortLabel(previous) : 'the previous step');
+    }
+
+    return '<button type="button" class="step-row is-' + state.state + '" data-act="open-step" data-id="' + esc(step.id) + '">' +
+      '<span class="step-num">' + (state.state === 'complete' ? '✓' : esc(step.orderInArea)) + '</span>' +
+      '<span class="step-main">' +
+        '<span class="step-title">' + esc(step.title) + '</span>' +
+        '<span class="step-sub">' + chip + '<span>' + detail + '</span></span>' +
+      '</span>' +
+      '<span class="step-action">' + action + '</span>' +
+    '</button>';
+  }
+
+  /* ---------------- step detail ---------------- */
+
+  function stepViewHtml() {
+    var state = stateOf(S.stepId);
+    if (!state) { S.view = 'dashboard'; return dashboardHtml(); }
+
+    var step = state.step;
+    var area = areaOfStep(step.id);
+    var back = '<button type="button" class="btn btn-ghost btn-small" data-act="dashboard">← All steps</button>';
+    var crumb = '<div class="crumb">' + back +
+      '<span class="dot">·</span><span>' + esc(area.code) + '</span>' +
+      '<span class="dot">·</span><span>Step ' + step.orderInArea + ' of ' + step.stepsInArea + '</span></div>';
+
+    if (state.state === 'locked') {
+      var previous = previousStepBefore(step.id);
+      return shell('', '<div class="wrap narrow">' + crumb +
+        '<div class="card locked-panel">' +
+          '<div class="lock-icon">🔒</div>' +
+          '<h2>This step is still locked</h2>' +
+          '<p>' + esc(previous ? shortLabel(previous) : 'The previous step') +
+            ' has not been completed yet. The pathway opens one step at a time so that ' +
+            'each one is actually applied before you move on.</p>' +
+          '<div class="btn-row" style="justify-content:center">' +
+            (previous ? '<button type="button" class="btn btn-primary" data-act="open-step" data-id="' +
+              esc(previous.id) + '">Go to Step ' + esc(previous.orderInArea) + '</button>' : '') +
+            '<button type="button" class="btn btn-ghost" data-act="dashboard">Back to overview</button>' +
+          '</div>' +
+        '</div></div>');
+    }
+
+    var readOnly = state.state === 'complete';
+    var header = '<div class="card" style="--accent:' + esc(area.accent) + '">' +
+      '<div class="step-head">' +
+        '<p class="kicker">' + esc(area.code) + ' · Step ' + step.orderInArea + ' of ' + step.stepsInArea +
+          (readOnly ? ' · Complete' : '') + '</p>' +
+        '<h1>' + esc(step.title) + '</h1>' +
+        '<p class="summary">' + esc(step.summary) + '</p>' +
+        (step.proof ? '<div class="callout"><strong>Proof of completion</strong>' + esc(step.proof) + '</div>' : '') +
+      '</div>' +
+      '<div class="panel">' +
+        '<h2>' + (readOnly ? 'Sub-steps you applied' : 'Sub-steps to apply') + '</h2>' +
+        substepsHtml(step, readOnly) +
+      '</div>' +
+      reflectionPanelHtml(state) +
+      actionsPanelHtml(state) +
+    '</div>';
+
+    return shell('', '<div class="wrap narrow">' + crumb + header + '</div>');
+  }
+
+  function substepsHtml(step, readOnly) {
+    return step.substeps.map(function (sub) {
+      var done = isDone(sub.id);
+      return '<div class="substep' + (done ? ' is-done' : '') + '">' +
+        '<div class="substep-letter">' + esc(sub.letter) + '</div>' +
+        '<div class="substep-body">' +
+          '<div class="substep-label">' + esc(sub.label) + '</div>' +
+          (sub.apply ? '<div class="substep-apply">' + esc(sub.apply) + '</div>' : '') +
+        '</div>' +
+        '<div class="substep-toggle">' + checkHtml(step.id, sub.id, done, readOnly) + '</div>' +
+      '</div>';
+    }).join('');
+  }
+
+  function checkHtml(stepId, substepId, done, readOnly) {
+    var title = readOnly
+      ? 'This step is complete — reopen it to make changes'
+      : (done ? 'Applied' : 'Mark as applied');
+    return '<label class="check' + (done ? ' on' : '') + (readOnly ? ' disabled' : '') + '" title="' + esc(title) + '">' +
+      '<input type="checkbox" data-act="toggle" data-step="' + esc(stepId) + '" data-sub="' + esc(substepId) + '"' +
+        (done ? ' checked' : '') + (readOnly ? ' disabled' : '') + '>' +
+      '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4.5 10.5l3.8 3.8 7.2-8.6" fill="none" ' +
+        'stroke="#ffffff" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
+      '<span class="sr-only">' + esc(isDoneLabel(done)) + '</span>' +
+    '</label>';
+  }
+
+  function isDoneLabel(done) { return done ? 'Applied' : 'Not yet applied'; }
+
+  function reflectionPanelHtml(state) {
+    var step = state.step;
+    var value = noteFor(step.id);
+
+    if (state.state === 'complete') {
+      return '<div class="panel">' +
+        '<h2>Your reflection</h2>' +
+        '<div class="review-block">' +
+          '<div class="meta">Recorded ' + esc(state.completedAt || '') + '</div>' +
+          '<p class="review-note">' + (value ? esc(value) : 'No reflection was recorded for this step.') + '</p>' +
+        '</div>' +
+        (step.reflectionPrompt ? '<p class="help" style="margin-top:10px">Prompt: ' + esc(step.reflectionPrompt) + '</p>' : '') +
+      '</div>';
+    }
+
+    var min = S.config.requireStepReflection ? (S.config.minReflectionLength || 0) : 0;
+    return '<div class="panel">' +
+      '<h2>Reflection &amp; evidence</h2>' +
+      '<div class="field">' +
+        '<label for="note">' + esc(step.reflectionPrompt || 'What did you do, and with whom?') + '</label>' +
+        '<p class="help">Write names and specifics — this is what your pastor or mentor will look at with you.</p>' +
+        '<textarea id="note" data-act="note" data-step="' + esc(step.id) + '" rows="5" ' +
+          'placeholder="Who did you apply this with, and what happened?">' + esc(value) + '</textarea>' +
+        '<div class="count"><span id="note-count">' + value.trim().length + '</span> characters' +
+          (min ? ' · at least ' + min + ' to complete this step' : '') + '</div>' +
+      '</div>' +
+    '</div>';
+  }
+
+  function actionsPanelHtml(state) {
+    var step = state.step;
+
+    if (state.state === 'complete') {
+      var next = nextStepAfter(step.id);
+      return '<div class="panel">' +
+        '<div class="banner ok"><span class="icon">✓</span><div>' +
+          'This step is complete and locked for review. Sub-steps stay ticked as a record of what you applied.' +
+        '</div></div>' +
+        '<div class="btn-row" style="margin-top:14px">' +
+          (next
+            ? '<button type="button" class="btn btn-primary" data-act="open-step" data-id="' + esc(next.id) + '">Next step →</button>'
+            : '<button type="button" class="btn btn-primary" data-act="dashboard">Back to overview</button>') +
+          '<button type="button" class="btn btn-ghost" data-act="dashboard">All steps</button>' +
+          '<button type="button" class="btn btn-danger" data-act="reopen" data-id="' + esc(step.id) + '">Reopen this step</button>' +
+        '</div>' +
+      '</div>';
+    }
+
+    var r = readiness(step);
+    return '<div class="panel">' +
+      '<div id="ready-hint">' + readinessHintHtml(r) + '</div>' +
+      '<div class="btn-row" style="margin-top:14px">' +
+        '<button type="button" class="btn btn-primary" id="complete-btn" data-act="complete" data-id="' +
+          esc(step.id) + '"' + (r.ready ? '' : ' disabled') + '>Mark step complete</button>' +
+        '<button type="button" class="btn btn-ghost" data-act="dashboard">Back to overview</button>' +
+      '</div>' +
+    '</div>';
+  }
+
+  function readinessHintHtml(r) {
+    if (r.ready) {
+      return '<div class="banner ok"><span class="icon">✓</span><div>' +
+        'Everything is applied and your reflection is written. You can complete this step.' +
+      '</div></div>';
+    }
+
+    var parts = [];
+    if (r.missing.length) {
+      parts.push('still to apply: <strong>' + esc(r.missing.join(', ')) + '</strong>');
+    }
+    if (!r.noteOk) {
+      parts.push('write your reflection (at least ' + (S.config.minReflectionLength || 0) + ' characters)');
+    }
+    return '<div class="banner warn"><span class="icon">!</span><div>' +
+      'A step can only be completed when every sub-step is applied and the reflection is written — ' +
+      parts.join(' and ') + '.</div></div>';
+  }
+
+  /* -----------------------------------------------------------------------
+   * Actions
+   * -------------------------------------------------------------------- */
+
+  function openStep(stepId) {
+    var step = index.stepById[stepId];
+    if (!step) return;
+    S.stepId = stepId;
+    S.view = 'step';
+    render();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function showToast(message, kind) {
+    var existing = document.querySelector('.toast');
+    if (existing) existing.remove();
+    var el = document.createElement('div');
+    el.className = 'toast' + (kind === 'error' ? ' error' : '');
+    el.textContent = message;
+    document.body.appendChild(el);
+    window.setTimeout(function () { if (el.parentNode) el.remove(); }, kind === 'error' ? 5200 : 3200);
+  }
+
+  function fail(err) {
+    showToast(err && err.message ? err.message : String(err), 'error');
+  }
+
+  function register(ev) {
+    ev.preventDefault();
+    var payload = {
+      name: (S.formValues.name || '').trim(),
+      community: (S.formValues.community || '').trim(),
+      email: (S.formValues.email || '').trim()
+    };
+
+    if (!payload.name || !payload.community || !payload.email) {
+      S.formError = 'Please complete your name, community, and email.';
+      S.formNotice = '';
+      render();
+      return;
+    }
+
+    S.formError = '';
+    var submit = document.querySelector('#register-form button[type="submit"]');
+    if (submit) { submit.disabled = true; submit.textContent = 'Opening…'; }
+
+    api('registerUser', [payload]).then(function (res) {
+      if (!res || !res.ok) {
+        S.formError = (res && res.error) || 'Registration failed. Please try again.';
+        render();
+        return;
+      }
+      S.user = res.user;
+      S.progress = res.progress || {};
+      S.notes = {};
+      if (res.communities) S.communities = res.communities;
+      if (res.user && res.user.email) {
+        try { window.localStorage.setItem(STORE_KEY, res.user.email); } catch (e) { /* private mode */ }
+      }
+      S.view = 'dashboard';
+      render();
+      showToast(res.user.isNew
+        ? 'Welcome, ' + res.user.name + '. Let\'s start with REACH, Step 1.'
+        : 'Welcome back, ' + res.user.name + '. Picking up where you left off.');
+    }).catch(function (err) {
+      S.formError = 'Could not save your registration: ' + (err && err.message ? err.message : String(err));
+      render();
+    });
+  }
+
+  function errorMessage(res) {
+    var code = res && res.error;
+    if (code === 'not_registered') {
+      return 'We could not find your registration. Please sign out and register again.';
+    }
+    return code || 'That change was not saved.';
+  }
+
+  function applyProgressResponse(res) {
+    if (!res || !res.ok) {
+      showToast(errorMessage(res), 'error');
+      return false;
+    }
+    S.progress = res.progress || {};
+    return true;
+  }
+
+  function toggleSubstep(stepId, substepId, done) {
+    if (S.view !== 'step' || S.stepId !== stepId) return;
+
+    // Optimistic update so the tick responds immediately.
+    if (done) {
+      S.progress[substepId] = { status: 'done', note: '', updatedAt: '' };
+    } else {
+      delete S.progress[substepId];
+    }
+    render();
+
+    enqueue(function () {
+      return api('toggleSubstep', [{
+        email: S.user.email, stepId: stepId, substepId: substepId, done: done
+      }]).then(function (res) {
+        if (!applyProgressResponse(res)) {
+          api('getState', [S.user.email]).then(function (fresh) {
+            if (fresh && fresh.ok) { S.progress = fresh.progress || {}; render(); }
+          });
+        }
+        render();
+      }).catch(function (err) {
+        fail(err);
+        render();
+      });
+    });
+  }
+
+  function completeStep(stepId) {
+    var step = index.stepById[stepId];
+    if (!step) return;
+    var r = readiness(step);
+    if (!r.ready) {
+      showToast(readinessHintText(r), 'error');
+      return;
+    }
+
+    var button = byId('complete-btn');
+    if (button) { button.disabled = true; button.textContent = 'Saving…'; }
+
+    enqueue(function () {
+      return api('completeStep', [{
+        email: S.user.email, stepId: stepId, note: noteFor(stepId)
+      }]).then(function (res) {
+        if (applyProgressResponse(res)) {
+          S.notes[stepId] = noteFor(stepId);
+          render();
+          showToast('Step complete. ' + (nextStepAfter(stepId)
+            ? 'The next step is now open.'
+            : 'You have finished the whole pathway!'));
+        } else {
+          render();
+        }
+      }).catch(function (err) { fail(err); render(); });
+    });
+  }
+
+  function readinessHintText(r) {
+    var parts = [];
+    if (r.missing.length) parts.push('apply sub-steps ' + r.missing.join(', '));
+    if (!r.noteOk) parts.push('write a reflection of at least ' + (S.config.minReflectionLength || 0) + ' characters');
+    return 'Before completing this step: ' + parts.join(' and ') + '.';
+  }
+
+  function reopenStep(stepId) {
+    var step = index.stepById[stepId];
+    if (!step) return;
+    var confirmed = window.confirm(
+      'Reopen "' + step.title + '"?\n\n' +
+      'This step and every step after it will need to be completed again. ' +
+      'Your applied sub-steps and reflections are kept, so re-completing them is quick. ' +
+      'Every action is recorded in the accountability log.'
+    );
+    if (!confirmed) return;
+
+    enqueue(function () {
+      return api('reopenStep', [{ email: S.user.email, stepId: stepId }]).then(function (res) {
+        if (applyProgressResponse(res)) {
+          render();
+          showToast('Step reopened. Complete it again when you are ready.');
+        } else {
+          render();
+        }
+      }).catch(function (err) { fail(err); render(); });
+    });
+  }
+
+  function signOut() {
+    try { window.localStorage.removeItem(STORE_KEY); } catch (e) { /* ignore */ }
+    S.user = null;
+    S.progress = {};
+    S.notes = {};
+    S.view = 'gate';
+    S.stepId = null;
+    S.formError = '';
+    S.formNotice = 'You have been signed out on this device. Enter your email to continue again.';
+    S.formValues = { name: '', community: '', email: S.formValues.email };
+    render();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  /* -----------------------------------------------------------------------
+   * Events
+   * -------------------------------------------------------------------- */
+
+  document.addEventListener('click', function (ev) {
+    var el = ev.target && ev.target.closest ? ev.target.closest('[data-act]') : null;
+    if (!el) return;
+    var action = el.getAttribute('data-act');
+    var id = el.getAttribute('data-id');
+    if (action === 'open-step') { ev.preventDefault(); openStep(id); }
+    else if (action === 'dashboard') { ev.preventDefault(); S.view = 'dashboard'; S.stepId = null; render(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+    else if (action === 'complete') { ev.preventDefault(); completeStep(id); }
+    else if (action === 'reopen') { ev.preventDefault(); reopenStep(id); }
+    else if (action === 'signout') { ev.preventDefault(); signOut(); }
+  });
+
+  document.addEventListener('change', function (ev) {
+    var el = ev.target;
+    if (!el || !el.getAttribute || el.getAttribute('data-act') !== 'toggle') return;
+    toggleSubstep(el.getAttribute('data-step'), el.getAttribute('data-sub'), el.checked === true);
+  });
+
+  document.addEventListener('input', function (ev) {
+    var el = ev.target;
+    if (!el || !el.getAttribute) return;
+    var name = el.getAttribute('name');
+
+    if (el.id === 'note') {
+      var stepId = el.getAttribute('data-step');
+      S.notes[stepId] = el.value;
+      updateNoteUi(stepId);
+      return;
+    }
+    if (name === 'name' || name === 'community' || name === 'email') {
+      S.formValues[name] = el.value;
+      S.formError = '';
+    }
+  });
+
+  function updateNoteUi(stepId) {
+    var step = index.stepById[stepId];
+    if (!step) return;
+    var value = noteFor(stepId).trim();
+    var counter = byId('note-count');
+    if (counter) counter.textContent = value.length;
+
+    var r = readiness(step);
+    var button = byId('complete-btn');
+    if (button) button.disabled = !r.ready;
+    var hint = byId('ready-hint');
+    if (hint) hint.innerHTML = readinessHintHtml(r);
+  }
+
+  document.addEventListener('submit', function (ev) {
+    if (ev.target && ev.target.id === 'register-form') register(ev);
+  });
+
+  /* -----------------------------------------------------------------------
+   * Boot
+   * -------------------------------------------------------------------- */
+
+  function applyBootstrap(bootstrap) {
+    bootstrap = bootstrap || {};
+    S.curriculum = bootstrap.curriculum;
+    S.config = bootstrap.config || {};
+    S.communities = bootstrap.communities || [];
+    S.initError = bootstrap.initError || '';
+    index = buildIndex(S.curriculum || { areas: [] });
+
+    var savedEmail = '';
+    try { savedEmail = window.localStorage.getItem(STORE_KEY) || ''; } catch (e) { savedEmail = ''; }
+
+    if (!savedEmail) { S.view = 'gate'; render(); return; }
+
+    S.formValues.email = savedEmail;
+    S.view = 'loading';
+    render();
+
+    api('getState', [savedEmail]).then(function (res) {
+      if (res && res.ok) {
+        S.user = res.user;
+        S.progress = res.progress || {};
+        S.notes = {};
+        S.view = 'dashboard';
+      } else {
+        if (res && res.error && res.error !== 'not_registered') S.formError = res.error;
+        S.formNotice = 'We could not find that email. Please register below to continue.';
+        S.view = 'gate';
+      }
+      render();
+    }).catch(function (err) {
+      S.formError = 'Could not load your progress: ' + (err && err.message ? err.message : String(err));
+      S.view = 'gate';
+      render();
+    });
+  }
+
+  if (window.__BOOTSTRAP__) {
+    applyBootstrap(window.__BOOTSTRAP__);
+  } else {
+    render();
+    api('getBootstrap', []).then(applyBootstrap).catch(function (err) {
+      S.formError = 'The app could not start: ' + (err && err.message ? err.message : String(err));
+      S.config = S.config || {};
+      render();
+    });
+  }
+})();
+</script>

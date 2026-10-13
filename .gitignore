@@ -1,0 +1,12 @@
+# Generated locally by tools/build-preview.ps1
+preview/
+
+# clasp credentials / local project binding
+.clasp.json
+.clasprc.json
+
+# OS and editor noise
+.DS_Store
+Thumbs.db
+desktop.ini
+*.log

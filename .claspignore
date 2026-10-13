@@ -1,0 +1,11 @@
+# Only the Apps Script project files are pushed to Google.
+# Everything else (README, tools, preview) stays in the repo.
+**/**
+!appsscript.json
+!Code.gs
+!Config.gs
+!Curriculum.gs
+!Index.html
+!Styles.html
+!Bootstrap.html
+!Client.html

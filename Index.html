@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title><?= appTitle ?></title>
+  <meta name="description" content="A guided walk through the RLCC ministry pathway: REACH, CORE, and LEAD. For lay leaders, interns, and pastors.">
+  <meta name="theme-color" content="#365233">
+  <style><?!= include('Styles'); ?></style>
+</head>
+<body>
+  <main id="app">
+    <div class="loading"><div class="spinner"></div>Loading the pathway…</div>
+  </main>
+
+  <!-- Settings + curriculum, then the client code. -->
+  <?!= include('Bootstrap'); ?>
+  <?!= include('Client'); ?>
+</body>
+</html>
