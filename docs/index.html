@@ -223,6 +223,20 @@
       font-size: 12.5px;
     }
 
+    .overlay-card .embed-ok {
+      font: inherit;
+      font-size: 13.5px;
+      margin-top: 14px;
+      padding: 0;
+      background: none;
+      border: 0;
+      color: var(--muted);
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    .overlay-card .embed-ok:hover { color: var(--ink); }
+
     .spinner {
       width: 24px;
       height: 24px;
@@ -311,6 +325,8 @@
             <button class="btn btn-ghost" id="try-again" type="button">Try again</button>
           </div>
 
+          <button class="embed-ok" id="embed-ok" type="button">It is already working — show the app</button>
+
           <details>
             <summary>Administrator note</summary>
             <p>This page frames the Google Apps Script deployment. For the embed to work, the script's
@@ -369,6 +385,25 @@
 
     var loaded = false;
     var timer = null;
+    var settleTimer = null;
+    var DISMISS_KEY = 'rlcc.shell.embedDismissed';
+
+    /* Google refuses to be framed until the Apps Script side allows it. A blocked
+       frame still fires `load` and reports zero child frames, so we check the
+       frame count instead of trusting the event on its own. */
+    function frameVerdict() {
+      try {
+        var win = frame.contentWindow;
+        if (!win || typeof win.length !== 'number') return 'unknown';
+        return win.length > 0 ? 'ready' : 'empty';
+      } catch (err) {
+        return 'unknown';
+      }
+    }
+
+    function embedDismissed() {
+      try { return window.localStorage.getItem(DISMISS_KEY) === '1'; } catch (err) { return false; }
+    }
 
     /* A cache buster keeps the browser from serving a stale embedded copy. */
     function withCacheBuster(url) {
@@ -388,6 +423,16 @@
       overlayTitle.textContent = title;
       overlayText.textContent = message;
       overlayTips.hidden = !showTips;
+      overlaySpinner.hidden = true;
+      overlay.hidden = false;
+      loadingTrack.classList.add('done');
+    }
+
+    function showBlockedPanel() {
+      overlayTitle.textContent = 'Open the app in a new tab';
+      overlayText.textContent = 'Google will not yet let this page display the reviewer inside it, ' +
+        'so nothing is showing below the bar. The app itself is fine — open it in a new tab and carry on.';
+      overlayTips.hidden = false;
       overlaySpinner.hidden = true;
       overlay.hidden = false;
       loadingTrack.classList.add('done');
@@ -418,6 +463,20 @@
       if (frame.src === 'about:blank') return;
       loaded = true;
       window.clearTimeout(timer);
+      hideOverlay();
+
+      /* Give the framed document a moment to build its nested sandbox frame,
+         then check whether anything really rendered. */
+      window.clearTimeout(settleTimer);
+      settleTimer = window.setTimeout(function () {
+        if (frameVerdict() !== 'empty') { hideOverlay(); return; }
+        if (embedDismissed()) { hideOverlay(); return; }
+        showBlockedPanel();
+      }, 1200);
+    });
+
+    document.getElementById('embed-ok').addEventListener('click', function () {
+      try { window.localStorage.setItem(DISMISS_KEY, '1'); } catch (err) { /* private mode */ }
       hideOverlay();
     });
 
