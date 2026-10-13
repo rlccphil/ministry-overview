@@ -71,28 +71,21 @@
       z-index: 10;
     }
 
-    .mark {
-      width: 30px;
-      height: 30px;
+    .brand-logo {
+      height: 24px;
+      width: auto;
       flex: none;
-      border-radius: 8px;
-      background: rgba(255, 255, 255, .13);
-      border: 1px solid rgba(255, 255, 255, .26);
-      display: grid;
-      place-items: center;
+      display: block;
     }
 
-    .mark svg { width: 17px; height: 17px; display: block; }
+    .brand-divider {
+      width: 1px;
+      height: 24px;
+      flex: none;
+      background: rgba(255, 255, 255, .35);
+    }
 
     .titles { display: flex; flex-direction: column; line-height: 1.25; min-width: 0; }
-
-    .titles .org {
-      font-size: 10.5px;
-      letter-spacing: .16em;
-      text-transform: uppercase;
-      opacity: .8;
-      white-space: nowrap;
-    }
 
     .titles .app {
       font-size: 15px;
@@ -274,7 +267,8 @@
     }
 
     @media (max-width: 620px) {
-      .titles .org { display: none; }
+      .brand-logo { height: 20px; }
+      .brand-divider { height: 20px; }
       .titles .app { font-size: 14px; }
       #copy-link { display: none; }
     }
@@ -284,15 +278,9 @@
 
   <div class="shell">
     <header class="shell-bar">
-      <div class="mark" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none">
-          <rect x="3" y="13" width="4" height="8" rx="2" fill="#ffffff" fill-opacity=".72"/>
-          <rect x="10" y="9" width="4" height="12" rx="2" fill="#ffffff" fill-opacity=".86"/>
-          <rect x="17" y="4" width="4" height="17" rx="2" fill="#ffffff"/>
-        </svg>
-      </div>
+      <img class="brand-logo" src="rlcc-logo-white.png" alt="Real Life Christian Communities" width="640" height="70">
+      <span class="brand-divider" aria-hidden="true"></span>
       <div class="titles">
-        <span class="org">Real Life Christian Communities</span>
         <span class="app">Ministry Overview &amp; Reviewer</span>
       </div>
       <span class="spacer"></span>
