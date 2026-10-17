@@ -40,11 +40,22 @@ var CONFIG = {
   minReflectionLength: 20,
 
   /* ------- Registration fields -------
-   * Optional shortlist for the "Community" dropdown. Leave the list empty to
-   * let the app build the suggestion list from what other people already
-   * typed in (free text is always allowed).
+   * The "Community" dropdown. Edit this list whenever a community is added,
+   * renamed, or closed; the text here is exactly what is saved in the
+   * Registrants sheet. The server only accepts names from this list.
+   * Leave the list empty to fall back to a free-text field that suggests
+   * what other people have already typed.
    */
-  communities: [],
+  communities: [
+    'Real Men in Christ (Remix)',
+    'Kindred Hearts (KH)',
+    'One in Christ (OIC)',
+    'Crossroads',
+    'Real Life Youth (RLY)',
+    'Australian Surplus',
+    'Southridge',
+    'No Community Yet'
+  ],
 
   /* ------- Support / accountability ------- */
   leaderContact: '',           // e.g. 'discipleship@rlcc.ph'
