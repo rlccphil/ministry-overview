@@ -279,6 +279,7 @@
       '</div>';
     }).join('');
 
+    var hasList = (S.communities || []).length > 0;
     var options = (S.communities || []).map(function (value) {
       return '<option value="' + esc(value) + '"></option>';
     }).join('');
@@ -300,9 +301,9 @@
           '<form id="register-form" style="margin-top:20px">' +
             '<div class="grid-2">' +
               fieldHtml('name', 'Full name', f.name, 'text', 'Juan dela Cruz') +
-              fieldHtml('community', 'Community', f.community, 'text', 'e.g. RLCC Ortigas, Circle — Men of Valor') +
+              communityFieldHtml(f.community) +
             '</div>' +
-            '<datalist id="community-list">' + options + '</datalist>' +
+            (hasList ? '' : '<datalist id="community-list">' + options + '</datalist>') +
             '<div style="margin-top:14px">' +
               fieldHtml('email', 'Email address', f.email, 'email', 'you@example.com') +
             '</div>' +
@@ -315,6 +316,22 @@
             'Enter the same email and you will pick up where you left off.</p>' +
         '</div>' +
       '</div>';
+  }
+
+  /* Community: a required dropdown when a list is configured, otherwise free text. */
+  function communityFieldHtml(value) {
+    var list = S.communities || [];
+    if (!list.length) {
+      return fieldHtml('community', 'Community', value, 'text', 'e.g. Kindred Hearts');
+    }
+    var opts = '<option value=""' + (value ? '' : ' selected') + ' disabled>Select your community</option>' +
+      list.map(function (c) {
+        return '<option value="' + esc(c) + '"' + (c === value ? ' selected' : '') + '>' + esc(c) + '</option>';
+      }).join('');
+    return '<div class="field">' +
+      '<label for="field-community">Community</label>' +
+      '<select id="field-community" name="community" required>' + opts + '</select>' +
+    '</div>';
   }
 
   function fieldHtml(name, label, value, type, placeholder) {
@@ -626,7 +643,7 @@
     };
 
     if (!payload.name || !payload.community || !payload.email) {
-      S.formError = 'Please complete your name, community, and email.';
+      S.formError = 'Please complete your name, community (choose from the list), and email.';
       S.formNotice = '';
       render();
       return;
