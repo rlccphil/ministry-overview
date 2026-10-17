@@ -488,7 +488,25 @@ textarea, input[type="text"], input[type="email"] {
   resize: vertical;
 }
 
-textarea:focus, input:focus { outline: 2px solid rgba(54, 82, 51, .35); outline-offset: 1px; border-color: var(--green); }
+select {
+  width: 100%;
+  font: inherit;
+  padding: 11px 38px 11px 13px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  color: var(--ink);
+  background-color: #fff;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1.5l5 5 5-5' fill='none' stroke='%23667065' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+}
+
+select:invalid { color: var(--muted); }
+
+textarea:focus, input:focus, select:focus { outline: 2px solid rgba(54, 82, 51, .35); outline-offset: 1px; border-color: var(--green); }
 
 textarea:disabled { background: #f7f7f5; color: #56605a; }
 
