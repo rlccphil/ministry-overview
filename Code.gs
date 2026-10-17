@@ -98,7 +98,12 @@ function registerUser(payload) {
     var email = normalizeEmail_(payload.email);
 
     if (name.length < 2) return { ok: false, error: 'Please enter your full name.' };
-    if (community.length < 2) return { ok: false, error: 'Please enter your community.' };
+    if (community.length < 2) return { ok: false, error: 'Please choose your community.' };
+    if (CONFIG.communities && CONFIG.communities.length) {
+      var canonical = matchCommunity_(community);
+      if (!canonical) return { ok: false, error: 'Please choose your community from the list.' };
+      community = canonical;
+    }
     if (!isEmail_(email)) return { ok: false, error: 'Please enter a valid email address.' };
 
     var lock = LockService.getScriptLock();
@@ -605,6 +610,16 @@ function logActivity_(email, name, action, itemId, detail) {
     // Logging must never break the user's action.
     console.warn('Activity log failed: ' + errorText_(err));
   }
+}
+
+/** Returns the official spelling of a community from CONFIG, or '' if it is not on the list. */
+function matchCommunity_(value) {
+  var key = String(value || '').trim().toLowerCase();
+  var list = CONFIG.communities || [];
+  for (var i = 0; i < list.length; i++) {
+    if (String(list[i]).toLowerCase() === key) return list[i];
+  }
+  return '';
 }
 
 function listCommunities_() {
