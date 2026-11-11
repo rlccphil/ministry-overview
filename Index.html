@@ -8,8 +8,8 @@
   <meta name="theme-color" content="#365233">
 
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
-  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Our Mission">
@@ -17,7 +17,7 @@
 
   <meta property="og:title" content="Fulfill our Mission">
   <meta property="og:description" content="A guided walk through the RLCC ministry pathway: REACH, CORE, and LEAD.">
-  <meta property="og:image" content="icons/icon-512.png">
+  <meta property="og:image" content="icon-512.png">
 
   <style>
     :root { --green: #365233; --bar-h: 52px; }
@@ -84,7 +84,7 @@
 <body>
   <header class="bar">
     <div class="bar-inner">
-      <img class="logo" src="icons/rlcc-logo-white.png" alt="Real Life Christian Communities">
+      <img class="logo" src="rlcc-logo-white.png" alt="Real Life Christian Communities">
       <span class="divider" aria-hidden="true"></span>
       <span class="title">Fulfill our Mission</span>
       <span class="spacer"></span>
@@ -110,7 +110,7 @@
     var APP_URL = 'https://script.google.com/macros/s/AKfycbwsdY4X-7wDP4RuaRz5rGoVEhZU53MiHhSFS3gkGiFLVYMaP67Ap7comLZ-7kJIopJn/exec';
 
     var frame = document.getElementById('app');
-    var status = document.getElementById('status');
+    var statusBox = document.getElementById('status');
     var statusText = document.getElementById('statusText');
     var toast = document.getElementById('toast');
     var slow;
@@ -119,8 +119,8 @@
 
     function showStatus(msg, spin) {
       statusText.textContent = msg;
-      status.querySelector('.spinner').style.display = spin ? '' : 'none';
-      status.hidden = false;
+      statusBox.querySelector('.spinner').style.display = spin ? '' : 'none';
+      statusBox.hidden = false;
     }
     function say(msg) {
       toast.textContent = msg; toast.classList.add('show');
@@ -135,7 +135,7 @@
       frame.src = APP_URL;
     }
     frame.addEventListener('load', function () {
-      if (frame.getAttribute('src')) { clearTimeout(slow); status.hidden = true; }
+      if (frame.getAttribute('src')) { clearTimeout(slow); statusBox.hidden = true; }
     });
     document.getElementById('reload').addEventListener('click', function () {
       frame.removeAttribute('src'); load();
