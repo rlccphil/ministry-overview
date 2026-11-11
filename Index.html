@@ -4,10 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Fulfill our Mission</title>
-  <meta name="description" content="A guided walk through the RLCC ministry pathway: REACH, CORE, and LEAD. For lay leaders, interns, and pastors.">
+  <meta name="description" content="A guided walk through the RLCC ministry pathway: REACH, CORE, and LEAD.">
   <meta name="theme-color" content="#365233">
 
-  <!-- Progressive web app -->
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
@@ -16,37 +15,141 @@
   <meta name="apple-mobile-web-app-title" content="Our Mission">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-  <!-- Share preview -->
   <meta property="og:title" content="Fulfill our Mission">
   <meta property="og:description" content="A guided walk through the RLCC ministry pathway: REACH, CORE, and LEAD.">
   <meta property="og:image" content="icons/icon-512.png">
 
-  <link rel="stylesheet" href="styles.css">
   <style>
-    .rlcc-brand {
-      background: #365233;
-      padding: calc(env(safe-area-inset-top, 0px) + 12px) 16px 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    :root { --green: #365233; --bar-h: 52px; }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+    body {
+      display: flex; flex-direction: column;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: #f6f8f5; color: #1c2a1a;
     }
-    .rlcc-brand img { height: 34px; width: auto; max-width: 100%; display: block; }
+    .bar {
+      background: var(--green); color: #fff;
+      padding: env(safe-area-inset-top, 0px) 14px 0;
+      padding-left: max(14px, env(safe-area-inset-left, 0px));
+      padding-right: max(14px, env(safe-area-inset-right, 0px));
+    }
+    .bar-inner {
+      min-height: var(--bar-h);
+      display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+      padding: 8px 0;
+    }
+    .logo { height: 26px; width: auto; display: block; }
+    .divider { width: 1px; height: 22px; background: rgba(255,255,255,.35); }
+    .title { font-weight: 700; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+    .spacer { flex: 1 1 auto; }
+    .actions { display: flex; gap: 8px; }
+    .btn {
+      font: inherit; font-size: 13px; font-weight: 600; cursor: pointer;
+      padding: 7px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,.35);
+      background: rgba(255,255,255,.14); color: #fff; text-decoration: none; white-space: nowrap;
+    }
+    .btn:hover { background: rgba(255,255,255,.24); }
+    .btn:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+    .btn.primary { background: #fff; color: var(--green); border-color: #fff; }
+    .btn.primary:hover { background: #eef3ec; }
+    .stage { position: relative; flex: 1 1 auto; min-height: 0; }
+    iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: #fff; }
+    .status {
+      position: absolute; inset: 0; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 12px;
+      background: #f6f8f5; text-align: center; padding: 24px; transition: opacity .2s;
+    }
+    .status[hidden] { display: none; }
+    .spinner {
+      width: 28px; height: 28px; border-radius: 50%;
+      border: 3px solid #d5dfd2; border-top-color: var(--green);
+      animation: spin .8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @media (prefers-reduced-motion: reduce) { .spinner { animation-duration: 3s; } }
+    .toast {
+      position: fixed; left: 50%; bottom: calc(env(safe-area-inset-bottom, 0px) + 20px);
+      transform: translateX(-50%); background: #1c2a1a; color: #fff;
+      padding: 9px 16px; border-radius: 999px; font-size: 13px; opacity: 0; pointer-events: none; transition: opacity .2s;
+    }
+    .toast.show { opacity: 1; }
+    @media (max-width: 640px) {
+      .divider { display: none; }
+      .title { order: 5; flex-basis: 100%; font-size: 14px; }
+      .logo { height: 22px; }
+    }
   </style>
 </head>
 <body>
-  <header class="rlcc-brand">
-    <img src="icons/rlcc-logo-white.png" alt="Real Life Christian Communities">
+  <header class="bar">
+    <div class="bar-inner">
+      <img class="logo" src="icons/rlcc-logo-white.png" alt="Real Life Christian Communities">
+      <span class="divider" aria-hidden="true"></span>
+      <span class="title">Fulfill our Mission</span>
+      <span class="spacer"></span>
+      <div class="actions">
+        <a class="btn primary" id="openTab" target="_blank" rel="noopener">Open in a new tab ↗</a>
+        <button class="btn" id="reload" type="button">Reload</button>
+        <button class="btn" id="copy" type="button">Copy link</button>
+      </div>
+    </div>
   </header>
 
-  <main id="app">
-    <div class="loading"><div class="spinner"></div>Loading the pathway…</div>
+  <main class="stage">
+    <iframe id="app" title="Fulfill our Mission" allow="clipboard-write"></iframe>
+    <div class="status" id="status" role="status">
+      <div class="spinner"></div>
+      <div id="statusText">Loading the pathway…</div>
+    </div>
   </main>
-
-  <!-- Settings + curriculum, then the client code. -->
-  <script src="bootstrap.js"></script>
-  <script src="client.js"></script>
+  <div class="toast" id="toast" role="status"></div>
 
   <script>
+    /* >>> PASTE YOUR APPS SCRIPT WEB APP URL HERE (the one ending in /exec) <<< */
+    var APP_URL = 'https://script.google.com/macros/s/AKfycbwsdY4X-7wDP4RuaRz5rGoVEhZU53MiHhSFS3gkGiFLVYMaP67Ap7comLZ-7kJIopJn/exec';
+
+    var frame = document.getElementById('app');
+    var status = document.getElementById('status');
+    var statusText = document.getElementById('statusText');
+    var toast = document.getElementById('toast');
+    var slow;
+
+    document.getElementById('openTab').href = APP_URL;
+
+    function showStatus(msg, spin) {
+      statusText.textContent = msg;
+      status.querySelector('.spinner').style.display = spin ? '' : 'none';
+      status.hidden = false;
+    }
+    function say(msg) {
+      toast.textContent = msg; toast.classList.add('show');
+      setTimeout(function () { toast.classList.remove('show'); }, 1800);
+    }
+    function load() {
+      if (APP_URL.indexOf('PASTE_') === 0) { showStatus('Add your Apps Script web app link to index.html (APP_URL).', false); return; }
+      if (!navigator.onLine) { showStatus('You are offline. Connect to the internet to open the pathway.', false); return; }
+      showStatus('Loading the pathway…', true);
+      clearTimeout(slow);
+      slow = setTimeout(function () { statusText.textContent = 'Still loading… this can take a few seconds.'; }, 8000);
+      frame.src = APP_URL;
+    }
+    frame.addEventListener('load', function () {
+      if (frame.getAttribute('src')) { clearTimeout(slow); status.hidden = true; }
+    });
+    document.getElementById('reload').addEventListener('click', function () {
+      frame.removeAttribute('src'); load();
+    });
+    document.getElementById('copy').addEventListener('click', function () {
+      var link = location.href.split('#')[0];
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(link).then(function () { say('Link copied'); }, function () { say('Copy failed'); });
+      } else { window.prompt('Copy this link:', link); }
+    });
+    window.addEventListener('online', function () { if (!frame.getAttribute('src')) load(); });
+
+    load();
+
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function () {
         navigator.serviceWorker.register('sw.js').catch(function () {});

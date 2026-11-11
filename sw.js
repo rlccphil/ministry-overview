@@ -1,13 +1,10 @@
 // Service worker for "Fulfill our Mission".
 // Caches the app shell so it opens fast and works offline.
 // Bump CACHE_VERSION whenever you change any shell file.
-const CACHE_VERSION = 'fulfill-mission-v1';
+const CACHE_VERSION = 'fulfill-mission-v2';
 const SHELL = [
   './',
   './index.html',
-  './styles.css',
-  './bootstrap.js',
-  './client.js',
   './manifest.webmanifest',
   './icons/icon-192.png',
   './icons/icon-512.png',
