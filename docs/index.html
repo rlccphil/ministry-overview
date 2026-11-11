@@ -110,7 +110,7 @@
     var APP_URL = 'https://script.google.com/macros/s/AKfycbwsdY4X-7wDP4RuaRz5rGoVEhZU53MiHhSFS3gkGiFLVYMaP67Ap7comLZ-7kJIopJn/exec';
 
     var frame = document.getElementById('app');
-    var status = document.getElementById('status');
+    var statusBox = document.getElementById('status');
     var statusText = document.getElementById('statusText');
     var toast = document.getElementById('toast');
     var slow;
@@ -119,8 +119,8 @@
 
     function showStatus(msg, spin) {
       statusText.textContent = msg;
-      status.querySelector('.spinner').style.display = spin ? '' : 'none';
-      status.hidden = false;
+      statusBox.querySelector('.spinner').style.display = spin ? '' : 'none';
+      statusBox.hidden = false;
     }
     function say(msg) {
       toast.textContent = msg; toast.classList.add('show');
@@ -135,7 +135,7 @@
       frame.src = APP_URL;
     }
     frame.addEventListener('load', function () {
-      if (frame.getAttribute('src')) { clearTimeout(slow); status.hidden = true; }
+      if (frame.getAttribute('src')) { clearTimeout(slow); statusBox.hidden = true; }
     });
     document.getElementById('reload').addEventListener('click', function () {
       frame.removeAttribute('src'); load();
