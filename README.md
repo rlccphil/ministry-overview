@@ -63,16 +63,12 @@ Leaders do not need a separate dashboard to start: open the sheet, sort by
 | [Client.html](Client.html) | The app: registration, dashboard, step view, gating UI. |
 | [appsscript.json](appsscript.json) | Apps Script manifest (timezone, scopes, web app access). |
 | [.claspignore](.claspignore) | Keeps repo-only files out of the Apps Script project. |
-| [docs/index.html](docs/index.html) | The standalone app shell published on GitHub Pages (frames the deployment). |
-| [docs/manifest.webmanifest](docs/manifest.webmanifest) | Web app manifest — installable to a phone home screen. |
-| [docs/icon-192.png](docs/icon-192.png), [icon-512.png](docs/icon-512.png), [apple-touch-icon.png](docs/apple-touch-icon.png), [favicon-32.png](docs/favicon-32.png) | App icons (swap in the official RLCC logo any time, keeping the file names). |
 | [tools/build-preview.ps1](tools/build-preview.ps1) | Builds `preview\index.html` — the real UI with a localStorage backend. |
 | [tools/preview-mock.js](tools/preview-mock.js) | The localStorage stand-in for `Code.gs` (preview only). |
 | [tools/browser-smoke-test.ps1](tools/browser-smoke-test.ps1) | Drives the whole flow in headless Chrome/Edge (34 checks). |
 | [tools/fake-apps-script.js](tools/fake-apps-script.js) | In-memory double for the Apps Script services `Code.gs` uses. |
 | [tools/server-logic-test.js](tools/server-logic-test.js) + [.ps1](tools/server-logic-test.ps1) | Runs the real `Code.gs` against that double (51 checks). |
-| [tools/shell-check.ps1](tools/shell-check.ps1) | Validates the GitHub Pages shell: config, manifest, icons, rendered page (20 checks). |
-| [tools/run-tests.ps1](tools/run-tests.ps1) | All three suites in one command. |
+| [tools/run-tests.ps1](tools/run-tests.ps1) | Both suites in one command. |
 
 ## Deploying
 
@@ -89,8 +85,6 @@ Leaders do not need a separate dashboard to start: open the sheet, sort by
    * **Execute as:** *Me*
    * **Who has access:** *Anyone* (participants do not need a Google account) or *Anyone with a Google account* if you prefer.
 8. Copy the `/exec` URL and share it with your leaders.
-9. Optional: publish the standalone shell below, so people get one short link and
-   an installable app instead of the long Google URL.
 
 ### Option B — clasp (if you use the command line)
 
@@ -108,70 +102,6 @@ Run `setup` once from the Apps Script editor, then open the deployment URL.
 > (*Deploy → Manage deployments → edit → New version*) so the live URL picks up
 > the changes.
 
-## Publishing the standalone shell on GitHub Pages
-
-`docs/` holds a small standalone app: a branded frame that loads the Apps Script
-deployment in place, with **Open in a new tab**, **Reload**, and **Copy link**
-always available. Because it is a web app manifest plus icons, it can be installed
-to a phone home screen and opens without browser chrome.
-
-### 1. Put the repo on GitHub
-
-```bash
-cd rlcc-ministry-overview
-git init
-git add .
-git commit -m "RLCC Ministry Overview and Reviewer: Apps Script app + GitHub Pages shell"
-git branch -M main
-git remote add origin https://github.com/YOUR-USER/rlcc-ministry-overview.git
-git push -u origin main
-```
-
-`preview/` is git-ignored; everything else belongs in the repo.
-
-### 2. Turn on Pages
-
-Repo **Settings → Pages → Build and deployment**:
-
-* **Source:** *Deploy from a branch*
-* **Branch:** `main` · **Folder:** `/docs`
-
-Your shell is then live at `https://YOUR-USER.github.io/rlcc-ministry-overview/`.
-
-### 3. Point the shell at your deployment
-
-Open [docs/index.html](docs/index.html) and edit the three values in
-`window.RLCC_SHELL` — `appUrl` (already set to this project's deployment),
-`siteUrl`, and `embedTimeoutMs` — then update the `canonical` / `og:` / `twitter:`
-URLs in the `<head>` to match `siteUrl`. That is the whole configuration; the
-shell check fails loudly if the `appUrl` is not a valid `/exec` URL.
-
-### 4. Make the embed work (one line, one redeploy)
-
-Google refuses to be framed unless the script says otherwise, so `doGet` in
-[Code.gs](Code.gs) already ends with:
-
-```javascript
-.setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
-```
-
-If your deployed version predates that line, paste it in and
-**Deploy → Manage deployments → edit → New version**. Until then, the shell still
-works — visitors just get the fallback panel and use *Open in a new tab*.
-
-That setting lets any site frame the app. It is fine for a registration form with
-no secrets; delete the line if you would rather not allow it, and treat the shell
-as a launcher page.
-
-### Sharing
-
-Share the GitHub Pages link — it is shorter, it previews nicely in chat, and the
-Apps Script URL stays out of sight:
-
-```
-https://YOUR-USER.github.io/rlcc-ministry-overview/
-```
-
 ## After deploying
 
 * **Test it yourself first:** register with your own email, complete REACH 1, and
@@ -182,8 +112,6 @@ https://YOUR-USER.github.io/rlcc-ministry-overview/
   natural starting point for a mentoring conversation.
 * **Want the sheet emailed to you weekly?** Add a time-driven trigger on a
   small reporting function — see *Ideas for later* below.
-* **Install it on a phone** (Chrome: *⋮ → Add to Home screen*; iOS Safari:
-  *Share → Add to Home Screen*). It then opens full screen with its own icon.
 
 ## Configuration (`Config.gs`)
 
@@ -235,21 +163,15 @@ review mode, and reopening.
 loads the real `Config.gs` + `Curriculum.gs` + `Code.gs` with an in-memory Apps
 Script double and checks the same rules plus the roster summary columns and the
 audit trail. This is how the backend is verified without deploying.
-* **Shell (20 checks)** — [tools/shell-check.ps1](tools/shell-check.ps1) confirms the
-GitHub Pages shell is configured, that the manifest and every icon it lists exist,
-and that the page really renders its frame, bar, and fallback panel.
 
 Run the suites before you push — the interface suite catches wording and layout
-regressions, the backend suite catches rule regressions, and the shell suite
-catches packaging mistakes that would only show up as a blank page on your live
-site. The `preview` folder is generated and git-ignored.
+regressions, and the backend suite catches rule regressions. The `preview`
+folder is generated and git-ignored.
 
 ## Security and privacy
 
 * The web app is served as *Execute as: Me*, so participants never see the
   spreadsheet and need no Google account.
-* The GitHub Pages shell is a static page: it holds the `/exec` URL and nothing
-  else. No data, no keys, no list of participants.
 * Access is by email address only — it keeps honest people honest and gives you a
   roster, but it is **not authentication**. Someone who knows another
   participant's email could load that person's progress. If your context needs
