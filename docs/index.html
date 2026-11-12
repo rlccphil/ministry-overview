@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Fulfill our Mission</title>
-  <meta name="description" content="A guided walk through the RLCC ministry pathway: REACH, CORE, and LEAD.">
+  <title>3M | Mission, Multiplication, Movement</title>
+  <meta name="description" content="A guided journey: check in on your whole self, find care, walk the REACH, CORE, and LEAD pathway, and plan your week.">
   <meta name="theme-color" content="#365233">
 
   <link rel="manifest" href="manifest.webmanifest">
@@ -12,73 +12,129 @@
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-title" content="Our Mission">
+  <meta name="apple-mobile-web-app-title" content="3M">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-  <meta property="og:title" content="Fulfill our Mission">
-  <meta property="og:description" content="A guided walk through the RLCC ministry pathway: REACH, CORE, and LEAD.">
+  <meta property="og:title" content="3M: Mission, Multiplication, Movement">
+  <meta property="og:description" content="A guided journey for RLCC: check in, find care, learn the pathway, and plan your week.">
   <meta property="og:image" content="icon-512.png">
 
   <style>
-    :root { --green: #365233; --bar-h: 52px; }
+    :root {
+      --green: #365233; --green-d: #27402a; --ink: #1f2b22; --muted: #66726a;
+      --bg: #f7f4ee; --card: #ffffff; --line: #e6e0d3;
+      --rel: #b4654a; --phy: #5b8a67; --men: #c39a3a; --spi: #7a64a8;
+      --serif: Georgia, "Iowan Old Style", "Times New Roman", serif;
+      --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    }
     * { box-sizing: border-box; }
     html, body { height: 100%; margin: 0; }
-    body {
-      display: flex; flex-direction: column;
-      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-      background: #f6f8f5; color: #1c2a1a;
-    }
-    .bar {
-      background: var(--green); color: #fff;
-      padding: env(safe-area-inset-top, 0px) 14px 0;
-      padding-left: max(14px, env(safe-area-inset-left, 0px));
-      padding-right: max(14px, env(safe-area-inset-right, 0px));
-    }
-    .bar-inner {
-      min-height: var(--bar-h);
-      display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
-      padding: 8px 0;
-    }
+    body { display: flex; flex-direction: column; font-family: var(--sans); background: var(--bg); color: var(--ink); line-height: 1.5; }
+    h1, h2, h3 { font-family: var(--serif); font-weight: 700; line-height: 1.2; margin: 0; }
+    p { margin: 0; }
+    button { font: inherit; cursor: pointer; }
+    :focus-visible { outline: 3px solid #8fb58a; outline-offset: 2px; }
+
+    /* Header + steps */
+    .bar { background: var(--green); color: #fff; padding: env(safe-area-inset-top, 0px) max(14px, env(safe-area-inset-right, 0px)) 0 max(14px, env(safe-area-inset-left, 0px)); }
+    .bar-inner { min-height: 50px; display: flex; align-items: center; gap: 12px; padding: 8px 0; }
     .logo { height: 26px; width: auto; display: block; }
     .divider { width: 1px; height: 22px; background: rgba(255,255,255,.35); }
-    .title { font-weight: 700; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
-    .spacer { flex: 1 1 auto; }
-    .actions { display: flex; gap: 8px; }
-    .btn {
-      font: inherit; font-size: 13px; font-weight: 600; cursor: pointer;
-      padding: 7px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,.35);
-      background: rgba(255,255,255,.14); color: #fff; text-decoration: none; white-space: nowrap;
-    }
-    .btn:hover { background: rgba(255,255,255,.24); }
-    .btn:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
-    .btn.primary { background: #fff; color: var(--green); border-color: #fff; }
-    .btn.primary:hover { background: #eef3ec; }
-    .stage { position: relative; flex: 1 1 auto; min-height: 0; }
-    iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: #fff; }
-    .status {
-      position: absolute; inset: 0; display: flex; flex-direction: column;
-      align-items: center; justify-content: center; gap: 12px;
-      background: #f6f8f5; text-align: center; padding: 24px; transition: opacity .2s;
-    }
-    .status[hidden] { display: none; }
-    .spinner {
-      width: 28px; height: 28px; border-radius: 50%;
-      border: 3px solid #d5dfd2; border-top-color: var(--green);
-      animation: spin .8s linear infinite;
-    }
+    .title { font-weight: 700; font-size: 17px; letter-spacing: .02em; }
+    .tagline { font-size: 13px; color: rgba(255,255,255,.78); }
+    .steps { background: #fff; border-bottom: 1px solid var(--line); display: grid; grid-template-columns: repeat(4, 1fr); padding: 0 max(6px, env(safe-area-inset-left, 0px)); }
+    .step { background: none; border: 0; border-bottom: 3px solid transparent; padding: 10px 4px 8px; color: var(--muted); display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 12.5px; font-weight: 600; }
+    .step .n { width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid #c9cfc6; display: grid; place-items: center; font-size: 12px; background: #fff; }
+    .step.done .n { background: var(--green); border-color: var(--green); color: #fff; }
+    .step[aria-current="step"] { color: var(--green); border-bottom-color: var(--green); }
+    .step[aria-current="step"] .n { border-color: var(--green); }
+
+    .stage { flex: 1 1 auto; min-height: 0; position: relative; }
+    .pane { display: none; position: absolute; inset: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+    .pane.active { display: block; }
+    .pane.fr.active { display: flex; flex-direction: column; overflow: hidden; }
+    .wrap { max-width: 760px; margin: 0 auto; padding: 26px 18px calc(env(safe-area-inset-bottom, 0px) + 40px); }
+
+    /* Shared bits */
+    .eyebrow { font-size: 11.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+    .card { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 24px; box-shadow: 0 8px 30px rgba(54,82,51,.06); }
+    .btn { border: 0; border-radius: 999px; padding: 12px 22px; font-weight: 600; font-size: 15px; background: var(--green); color: #fff; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; }
+    .btn:hover { background: var(--green-d); }
+    .btn.ghost { background: #fff; color: var(--green); border: 1.5px solid var(--green); }
+    .btn.ghost:hover { background: #eef3ec; }
+    .btn[disabled] { opacity: .4; cursor: not-allowed; }
+    .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+    .lead { color: #46534a; font-size: 16.5px; }
+    .note { font-size: 13px; color: var(--muted); }
+    .link { background: none; border: 0; padding: 0; color: var(--green); text-decoration: underline; font-size: 13px; }
+
+    /* Check-in */
+    .greet { margin: 8px 0 6px; font-size: clamp(30px, 6vw, 42px); }
+    .field { display: grid; gap: 6px; margin: 18px 0 4px; max-width: 420px; }
+    .field label { font-weight: 600; font-size: 14px; }
+    .field input { font: inherit; padding: 11px 13px; border: 1px solid #d3cdbf; border-radius: 12px; background: #fff; }
+    .verse { margin-top: 18px; padding-left: 14px; border-left: 3px solid #c9d8c5; font-family: var(--serif); font-style: italic; color: #4a574d; }
+    .verse span { display: block; font-style: normal; font-family: var(--sans); font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+    .progress { display: flex; gap: 6px; margin-bottom: 18px; }
+    .progress i { flex: 1; height: 5px; border-radius: 4px; background: #e2dccd; }
+    .progress i.on { background: var(--green); }
+    .q { border: 0; padding: 0; margin: 0 0 22px; }
+    .q legend { padding: 0; font-weight: 600; font-size: 16px; margin-bottom: 10px; }
+    .scale { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+    .scale { position: relative; }
+    .scale input { position: absolute; opacity: 0; pointer-events: none; }
+    .scale label { display: grid; place-items: center; text-align: center; min-height: 46px; padding: 6px 2px; font-size: 12px; font-weight: 600; line-height: 1.15; border: 1.5px solid #d9d3c5; border-radius: 12px; background: #fff; color: #4a574d; cursor: pointer; }
+    .scale input:checked + label { background: var(--dc, var(--green)); border-color: var(--dc, var(--green)); color: #fff; }
+    .scale input:focus-visible + label { outline: 3px solid #8fb58a; outline-offset: 2px; }
+    .nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 8px; }
+
+    .hero { display: grid; gap: 20px; grid-template-columns: 1fr; align-items: center; }
+    @media (min-width: 680px) { .hero { grid-template-columns: 1.1fr .9fr; } }
+    .score-big { font-family: var(--serif); font-size: 64px; line-height: 1; }
+    .score-big small { font-size: 20px; color: var(--muted); font-family: var(--sans); }
+    .pill { display: inline-block; padding: 4px 12px; border-radius: 999px; color: #fff; font-size: 13px; font-weight: 700; }
+    canvas.radar { width: 100%; max-width: 420px; aspect-ratio: 1; display: block; margin: 0 auto; }
+    .doms { display: grid; gap: 12px; margin-top: 18px; grid-template-columns: 1fr; }
+    @media (min-width: 680px) { .doms { grid-template-columns: 1fr 1fr; } }
+    .dom { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 16px; }
+    .dom h3 { font-size: 13px; letter-spacing: .1em; text-transform: uppercase; font-family: var(--sans); display: flex; align-items: center; gap: 8px; }
+    .dom h3 b { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+    .dom .num { font-family: var(--serif); font-size: 34px; margin: 4px 0; }
+    .dom .num small { font-size: 14px; color: var(--muted); font-family: var(--sans); }
+    .bar-track { height: 7px; border-radius: 4px; background: #ece7da; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 4px; }
+    .dom p { font-size: 14px; color: #46534a; margin-top: 10px; }
+    .block { margin-top: 22px; }
+    .block h2 { font-size: 22px; margin-bottom: 8px; }
+    .block ul { margin: 6px 0 0; padding-left: 20px; }
+    .block li { margin: 4px 0; }
+    .trend { font-size: 14px; color: var(--muted); margin-top: 8px; }
+
+    /* Care */
+    .rec { border-left: 6px solid var(--green); }
+    .rec.strong { border-left-color: var(--rel); background: #fffaf7; }
+    .rec.suggested { border-left-color: var(--men); background: #fffdf6; }
+    .rec h2 { font-size: 26px; margin: 6px 0 10px; }
+    .safety { margin-top: 16px; padding: 12px 14px; background: #f1f5ef; border-radius: 12px; font-size: 13.5px; color: #3c4a3f; }
+    .embed { margin-top: 20px; border: 1px solid var(--line); border-radius: 16px; overflow: hidden; background: #fff; position: relative; height: max(640px, 82vh); }
+    .embed iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+
+    /* iframe panes */
+    .tool { display: flex; align-items: center; gap: 8px; padding: 8px 14px; background: #fff; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+    .tool .sp { flex: 1; }
+    .tbtn { font-size: 13px; font-weight: 600; padding: 6px 12px; border-radius: 8px; border: 1px solid #cfd8cb; background: #fff; color: var(--green); text-decoration: none; }
+    .tbtn:hover { background: #eef3ec; }
+    .tbtn.go { background: var(--green); color: #fff; border-color: var(--green); }
+    .fwrap { position: relative; flex: 1 1 auto; min-height: 0; }
+    .fwrap iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: #fff; }
+    .fstatus { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; background: var(--bg); text-align: center; padding: 24px; z-index: 2; }
+    .fstatus[hidden] { display: none; }
+    .spinner { width: 28px; height: 28px; border-radius: 50%; border: 3px solid #d5dfd2; border-top-color: var(--green); animation: spin .8s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
     @media (prefers-reduced-motion: reduce) { .spinner { animation-duration: 3s; } }
-    .toast {
-      position: fixed; left: 50%; bottom: calc(env(safe-area-inset-bottom, 0px) + 20px);
-      transform: translateX(-50%); background: #1c2a1a; color: #fff;
-      padding: 9px 16px; border-radius: 999px; font-size: 13px; opacity: 0; pointer-events: none; transition: opacity .2s;
-    }
+    .toast { position: fixed; left: 50%; bottom: calc(env(safe-area-inset-bottom, 0px) + 20px); transform: translateX(-50%); background: #1f2b22; color: #fff; padding: 9px 16px; border-radius: 999px; font-size: 13px; opacity: 0; pointer-events: none; transition: opacity .2s; z-index: 10; }
     .toast.show { opacity: 1; }
-    @media (max-width: 640px) {
-      .divider { display: none; }
-      .title { order: 5; flex-basis: 100%; font-size: 14px; }
-      .logo { height: 22px; }
-    }
+    @media (max-width: 520px) { .divider { display: none; } .tagline { display: none; } .card { padding: 18px; } .score-big { font-size: 54px; } }
   </style>
 </head>
 <body>
@@ -86,75 +142,432 @@
     <div class="bar-inner">
       <img class="logo" src="rlcc-logo-white.png" alt="Real Life Christian Communities">
       <span class="divider" aria-hidden="true"></span>
-      <span class="title">Fulfill our Mission</span>
-      <span class="spacer"></span>
-      <div class="actions">
-        <a class="btn primary" id="openTab" target="_blank" rel="noopener">Open in a new tab ↗</a>
-        <button class="btn" id="reload" type="button">Reload</button>
-        <button class="btn" id="copy" type="button">Copy link</button>
-      </div>
+      <span class="title">3M</span><span class="tagline">Mission · Multiplication · Movement</span>
     </div>
   </header>
 
+  <nav class="steps" aria-label="Your journey">
+    <button class="step" data-step="checkin"><span class="n">1</span>Check-in</button>
+    <button class="step" data-step="care"><span class="n">2</span>Care</button>
+    <button class="step" data-step="learn"><span class="n">3</span>Learn</button>
+    <button class="step" data-step="plan"><span class="n">4</span>Plan</button>
+  </nav>
+
   <main class="stage">
-    <iframe id="app" title="Fulfill our Mission" allow="clipboard-write"></iframe>
-    <div class="status" id="status" role="status">
-      <div class="spinner"></div>
-      <div id="statusText">Loading the pathway…</div>
-    </div>
+    <section class="pane" id="pane-checkin" aria-label="Check-in"><div class="wrap" id="checkin"></div></section>
+    <section class="pane" id="pane-care" aria-label="Care"><div class="wrap" id="care"></div></section>
+    <section class="pane fr" id="pane-learn" aria-label="Learn"></section>
+    <section class="pane fr" id="pane-plan" aria-label="Plan"></section>
   </main>
   <div class="toast" id="toast" role="status"></div>
 
+  <script src="jspdf.umd.min.js"></script>
   <script>
-    /* >>> PASTE YOUR APPS SCRIPT WEB APP URL HERE (the one ending in /exec) <<< */
-    var APP_URL = 'https://script.google.com/macros/s/AKfycbwsdY4X-7wDP4RuaRz5rGoVEhZU53MiHhSFS3gkGiFLVYMaP67Ap7comLZ-7kJIopJn/exec';
+  (function () {
+    'use strict';
 
-    var frame = document.getElementById('app');
-    var statusBox = document.getElementById('status');
-    var statusText = document.getElementById('statusText');
-    var toast = document.getElementById('toast');
-    var slow;
+    /* ---------- Settings: change links here ---------- */
+    var CONFIG = {
+      LEARN_URL:  'https://script.google.com/macros/s/AKfycbwsdY4X-7wDP4RuaRz5rGoVEhZU53MiHhSFS3gkGiFLVYMaP67Ap7comLZ-7kJIopJn/exec',
+      CLINIC_URL: 'https://rlccphil.github.io/soul-clinic/',
+      WISE_URL:   'https://rlccphil.github.io/wise-planning/'
+    };
 
-    document.getElementById('openTab').href = APP_URL;
+    /* ---------- Check-in content (edit the words here) ---------- */
+    var SCALE = ['Never', 'Rarely', 'Sometimes', 'Often', 'Almost always'];
+    var DOMAINS = [
+      { id: 'rel', name: 'Relational', color: '#b4654a', title: 'Connection & belonging',
+        sub: 'Think about your closest relationships and your church family.',
+        qs: ['I have felt connected to people who care about me.',
+             'I have had at least one honest conversation where I felt truly heard.',
+             'My key relationships (family, friends, community) have felt peaceful rather than strained.',
+             'I have given time and attention to others without feeling drained or resentful.',
+             'I have felt that I belong in my Christian community.'] },
+      { id: 'phy', name: 'Physical', color: '#5b8a67', title: 'Body & energy',
+        sub: 'Think about how you have been caring for the body God gave you.',
+        qs: ['I have been sleeping well enough to feel rested.',
+             'I have had the energy my days required.',
+             'I have eaten and hydrated in a way that cares for my body.',
+             'I have moved my body (walking, exercise, or stretching) on most days.',
+             'I have taken real breaks and kept a healthy rhythm of work and rest.'] },
+      { id: 'men', name: 'Mental-Emotional', color: '#c39a3a', title: 'Mind & mood',
+        sub: 'Think about your thoughts, your feelings, and how you handle pressure.',
+        qs: ['My mind has felt clear and able to focus.',
+             'I have felt calm and steady more often than anxious or overwhelmed.',
+             'I have been able to name and process my feelings, such as sadness, anger, or worry, in a healthy way.',
+             'I have felt hopeful and able to enjoy good things.',
+             'I have handled stress and setbacks without feeling stuck or hopeless.'] },
+      { id: 'spi', name: 'Spiritual', color: '#7a64a8', title: 'Faith & grace',
+        sub: 'Think about your walk with God, not how well you think you should be doing.',
+        qs: ['I have spent unhurried time with God in prayer.',
+             'I have read or listened to Scripture and let it speak to me.',
+             'I have sensed God\u2019s presence and grace in my days.',
+             'I have trusted God with my worries rather than carrying them alone.',
+             'I have lived out my faith through obedience, service, or witness.'] }
+    ];
 
-    function showStatus(msg, spin) {
-      statusText.textContent = msg;
-      statusBox.querySelector('.spinner').style.display = spin ? '' : 'none';
-      statusBox.hidden = false;
+    var DOM_TEXT = {
+      rel: { low: 'You may be feeling isolated or strained in your relationships. Reach out to one trusted person this week and let them know how you are really doing.',
+             mid: 'Some of your relationships are life-giving while others may need attention. Consider an honest conversation or an invitation to share a meal.',
+             high: 'You are well connected and supported. Keep investing in your community, and look for someone who may need your friendship.' },
+      phy: { low: 'Your body seems to be running on empty. Sleep, food, movement, and rest are not selfish; they are stewardship of the body God gave you.',
+             mid: 'Your body is holding up, though some rhythms of rest or movement may be slipping. Choose one small habit to protect this week.',
+             high: 'You are caring well for your body. Keep your rhythms of rest and movement steady.' },
+      men: { low: 'Your mind and emotions may be heavily burdened. Naming your feelings to a trusted person or a counselor is a wise and brave step.',
+             mid: 'You are managing, though stress or worry may be wearing on you at times. Make space to process your feelings and to rest your mind.',
+             high: 'Your mind and heart feel steady and hopeful. Keep making room for rest, joy, and honest reflection.' },
+      spi: { low: 'Your connection with God may feel distant or dry. That is a common season, and a good time to seek spiritual direction and to begin again with small, simple steps.',
+             mid: 'Your walk with God is present but could be deeper or more consistent. A regular, unhurried time in Scripture and prayer can help.',
+             high: 'You are walking closely with God. Stay rooted in prayer and Scripture, and let it overflow into service and witness.' }
+    };
+    var STEPS_TEXT = {
+      rel: ['Reach out to one trusted person this week and share how you are really doing.', 'Join or return to your community or circle gathering.', 'Ask someone to pray with you about what you are carrying.'],
+      phy: ['Set a regular bedtime for the next seven days.', 'Take a ten-minute walk each day.', 'Plan one true Sabbath rest this week.'],
+      men: ['Write down what is weighing on you, then pray over it.', 'Limit news and social media for a few days.', 'Talk with a pastor, mentor, or counselor about what you are facing.'],
+      spi: ['Set aside fifteen unhurried minutes with God each day.', 'Read one short passage slowly and ask what God is saying to you.', 'Request spiritual direction through Soul Clinic.']
+    };
+    var BANDS = [
+      { max: 39, label: 'Needs care', color: '#a4493d',
+        text: 'Overall, your answers suggest you are carrying a heavy load right now, and you do not have to carry it alone. This is a season to slow down, be honest with someone you trust, and let others walk with you.',
+        verse: ['Come unto me, all ye that labour and are heavy laden, and I will give you rest.', 'Matthew 11:28 (KJV)'] },
+      { max: 59, label: 'Under strain', color: '#b8832f',
+        text: 'Overall, this season appears to be asking a lot of you. Some areas of life are holding steady while others are under strain. Small, steady changes and the support of others can make a real difference.',
+        verse: ['Cast thy burden upon the LORD, and he shall sustain thee.', 'Psalm 55:22 (KJV)'] },
+      { max: 79, label: 'Steady', color: '#4f7a55',
+        text: 'Overall, you are doing reasonably well, with a few areas that could use attention. Protect the rhythms that are working, and give a little extra care to the area that scored lowest.',
+        verse: ['See then that ye walk circumspectly, not as fools, but as wise, redeeming the time.', 'Ephesians 5:15-16 (KJV)'] },
+      { max: 100, label: 'Flourishing', color: '#2f6b4f',
+        text: 'Overall, you are in a good place. Your relationships, body, mind, and spirit are working together well. Keep guarding the rhythms that sustain you, and consider how your strength can serve others.',
+        verse: ['Beloved, I wish above all things that thou mayest prosper and be in health, even as thy soul prospereth.', '3 John 1:2 (KJV)'] }
+    ];
+    function bandOf(n) { for (var i = 0; i < BANDS.length; i++) if (n <= BANDS[i].max) return BANDS[i]; return BANDS[3]; }
+    function tier(n) { return n < 40 ? 'low' : n < 70 ? 'mid' : 'high'; }
+
+    /* ---------- Storage (stays on this device) ---------- */
+    var KEY = 'rlcc_rpms_v1', JKEY = 'rlcc_journey_v1';
+    function load(k, d) { try { var v = JSON.parse(localStorage.getItem(k)); return v || d; } catch (e) { return d; } }
+    function save(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+    var store = load(KEY, { name: '', history: [] });
+    var journey = load(JKEY, { visited: {} });
+
+    /* ---------- Helpers ---------- */
+    function $(s, r) { return (r || document).querySelector(s); }
+    function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+    function say(msg) { var t = $('#toast'); t.textContent = msg; t.classList.add('show'); setTimeout(function () { t.classList.remove('show'); }, 2200); }
+    function fmtDate(ts, long) { return new Date(ts).toLocaleDateString('en-US', long ? { weekday: 'long', month: 'long', day: 'numeric' } : { month: 'short', day: 'numeric' }); }
+    function greeting() { var h = new Date().getHours(); return h < 12 ? 'Good morning.' : h < 18 ? 'Good afternoon.' : 'Good evening.'; }
+
+    function compute(answers) {
+      var scores = DOMAINS.map(function (d, di) {
+        var sum = 0; for (var i = 0; i < 5; i++) sum += answers[di * 5 + i];
+        return Math.round(((sum / 5) - 1) / 4 * 100);
+      });
+      var overall = Math.round(scores.reduce(function (a, b) { return a + b; }, 0) / 4);
+      return { ts: Date.now(), answers: answers.slice(), scores: scores, overall: overall };
     }
-    function say(msg) {
-      toast.textContent = msg; toast.classList.add('show');
-      setTimeout(function () { toast.classList.remove('show'); }, 1800);
+    function lowDomains(r) {
+      var idx = [0, 1, 2, 3].sort(function (a, b) { return r.scores[a] - r.scores[b]; });
+      var below = idx.filter(function (i) { return r.scores[i] < 60; }).slice(0, 2);
+      return (below.length ? below : [idx[0]]).map(function (i) { return DOMAINS[i].name; });
     }
-    function load() {
-      if (APP_URL.indexOf('PASTE_') === 0) { showStatus('Add your Apps Script web app link to index.html (APP_URL).', false); return; }
-      if (!navigator.onLine) { showStatus('You are offline. Connect to the internet to open the pathway.', false); return; }
-      showStatus('Loading the pathway…', true);
-      clearTimeout(slow);
-      slow = setTimeout(function () { statusText.textContent = 'Still loading… this can take a few seconds.'; }, 8000);
-      frame.src = APP_URL;
+    function careLevel(r) {
+      var min = Math.min.apply(null, r.scores);
+      if (r.overall < 45 || min < 25) return 'strong';
+      if (r.overall < 65 || min < 40) return 'suggested';
+      return 'optional';
     }
-    frame.addEventListener('load', function () {
-      if (frame.getAttribute('src')) { clearTimeout(slow); statusBox.hidden = true; }
-    });
-    document.getElementById('reload').addEventListener('click', function () {
-      frame.removeAttribute('src'); load();
-    });
-    document.getElementById('copy').addEventListener('click', function () {
-      var link = location.href.split('#')[0];
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(link).then(function () { say('Link copied'); }, function () { say('Copy failed'); });
-      } else { window.prompt('Copy this link:', link); }
-    });
-    window.addEventListener('online', function () { if (!frame.getAttribute('src')) load(); });
+    function weakest(r) { var w = 0; r.scores.forEach(function (s, i) { if (s < r.scores[w]) w = i; }); return w; }
+    function strongest(r) { var w = 0; r.scores.forEach(function (s, i) { if (s > r.scores[w]) w = i; }); return w; }
 
-    load();
+    /* ---------- Radar chart ---------- */
+    function drawRadar(canvas, px, scores, bg) {
+      canvas.width = px; canvas.height = px;
+      var c = canvas.getContext('2d'), cx = px / 2, cy = px / 2, R = px * 0.29;
+      if (bg) { c.fillStyle = bg; c.fillRect(0, 0, px, px); } else c.clearRect(0, 0, px, px);
+      var ang = [-90, 0, 90, 180].map(function (a) { return a * Math.PI / 180; });
+      function pt(i, f) { return [cx + Math.cos(ang[i]) * R * f, cy + Math.sin(ang[i]) * R * f]; }
+      c.lineWidth = Math.max(1, px / 600); c.strokeStyle = '#d6d0c2'; c.setLineDash([px / 120, px / 120]);
+      [0.25, 0.5, 0.75, 1].forEach(function (f) { c.beginPath(); for (var i = 0; i < 4; i++) { var p = pt(i, f); i ? c.lineTo(p[0], p[1]) : c.moveTo(p[0], p[1]); } c.closePath(); c.stroke(); });
+      c.setLineDash([]); for (var i = 0; i < 4; i++) { var e = pt(i, 1); c.beginPath(); c.moveTo(cx, cy); c.lineTo(e[0], e[1]); c.stroke(); }
+      c.beginPath(); for (i = 0; i < 4; i++) { var q = pt(i, Math.max(scores[i], 4) / 100); i ? c.lineTo(q[0], q[1]) : c.moveTo(q[0], q[1]); }
+      c.closePath(); c.fillStyle = 'rgba(54,82,51,.20)'; c.fill(); c.lineWidth = px / 220; c.strokeStyle = '#365233'; c.stroke();
+      for (i = 0; i < 4; i++) { var d = pt(i, Math.max(scores[i], 4) / 100); c.beginPath(); c.arc(d[0], d[1], px / 90, 0, 7); c.fillStyle = DOMAINS[i].color; c.fill(); }
+      var f1 = Math.round(px * 0.040), f2 = Math.round(px * 0.034);
+      function label(i, x, y1, y2, align) {
+        c.textAlign = align; c.font = '600 ' + f1 + 'px system-ui, sans-serif'; c.fillStyle = '#1f2b22'; c.fillText(DOMAINS[i].name, x, y1);
+        c.font = '700 ' + f2 + 'px system-ui, sans-serif'; c.fillStyle = DOMAINS[i].color; c.fillText(String(scores[i]), x, y2);
+      }
+      label(0, cx, px * 0.105, px * 0.15, 'center');
+      label(1, cx + R + px * 0.04, cy - px * 0.005, cy + px * 0.04, 'left');
+      label(2, cx, cy + R + px * 0.075, cy + R + px * 0.12, 'center');
+      label(3, cx - R - px * 0.04, cy - px * 0.005, cy + px * 0.04, 'right');
+    }
 
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function () {
-        navigator.serviceWorker.register('sw.js').catch(function () {});
+    /* ---------- Check-in view ---------- */
+    var state = { page: 'intro', answers: new Array(20).fill(null), result: null };
+    var elCheck = $('#checkin');
+
+    function renderIntro() {
+      var last = store.history[store.history.length - 1];
+      elCheck.innerHTML =
+        '<p class="eyebrow">Today \u00b7 ' + esc(fmtDate(Date.now(), true)) + '</p>' +
+        '<h1 class="greet">' + greeting() + '</h1>' +
+        '<p class="lead">Four areas of life, one honest read on where you are right now. Twenty short questions, about four quiet minutes.</p>' +
+        '<div class="card" style="margin-top:22px">' +
+          '<p class="eyebrow">Daily RPMS</p>' +
+          '<h2 style="font-size:26px;margin:6px 0 8px">Relational \u00b7 Physical \u00b7 Mental-Emotional \u00b7 Spiritual</h2>' +
+          '<p class="lead" style="font-size:15.5px">For each statement, choose how true it has been for you over the last few days. There are no right answers. Honest ones help most.</p>' +
+          '<div class="field"><label for="nm">Your name (optional, for your report)</label><input id="nm" type="text" autocomplete="name" value="' + esc(store.name) + '" placeholder="Juan dela Cruz"></div>' +
+          '<div class="row" style="margin-top:20px"><button class="btn" id="start">Start today\u2019s check-in \u2192</button>' +
+          (last ? '<button class="btn ghost" id="viewlast">View last results</button>' : '') + '</div>' +
+          (last ? '<p class="note" style="margin-top:14px">Last check-in \u00b7 ' + esc(fmtDate(last.ts)) + ' \u2014 overall ' + last.overall + '/100 \u00b7 <button class="link" id="clear">Clear saved check-ins</button></p>' : '') +
+          '<p class="note" style="margin-top:14px">Your answers stay on this device. Nothing is sent to RLCC unless you choose to share it with Soul Clinic.</p>' +
+        '</div>' +
+        '<div class="verse">\u201cBeloved, I wish above all things that thou mayest prosper and be in health, even as thy soul prospereth.\u201d<span>3 John 1:2 (KJV)</span></div>';
+    }
+
+    function renderQuestions(di) {
+      var d = DOMAINS[di], prog = '';
+      for (var p = 0; p < 4; p++) prog += '<i class="' + (p <= di ? 'on' : '') + '"></i>';
+      var qs = d.qs.map(function (q, qi) {
+        var idx = di * 5 + qi, name = 'q' + idx, opts = '';
+        for (var v = 1; v <= 5; v++) {
+          opts += '<input type="radio" name="' + name + '" id="' + name + '_' + v + '" value="' + v + '"' + (state.answers[idx] === v ? ' checked' : '') + '>' +
+                  '<label for="' + name + '_' + v + '">' + SCALE[v - 1] + '</label>';
+        }
+        return '<fieldset class="q"><legend>' + esc(q) + '</legend><div class="scale" style="--dc:' + d.color + '">' + opts + '</div></fieldset>';
+      }).join('');
+      elCheck.innerHTML =
+        '<div class="progress" aria-hidden="true">' + prog + '</div>' +
+        '<p class="eyebrow" style="color:' + d.color + '">' + esc(d.name) + ' \u00b7 ' + (di + 1) + ' of 4</p>' +
+        '<h2 style="font-size:30px;margin:6px 0 6px">' + esc(d.title) + '</h2>' +
+        '<p class="lead" style="margin-bottom:22px">' + esc(d.sub) + '</p>' +
+        qs +
+        '<div class="nav"><button class="btn ghost" id="back">\u2190 Back</button><button class="btn" id="next" disabled>' + (di === 3 ? 'See my results' : 'Next \u2192') + '</button></div>';
+      updateNext(di);
+    }
+    function pageComplete(di) { for (var i = 0; i < 5; i++) if (!state.answers[di * 5 + i]) return false; return true; }
+    function updateNext(di) { var b = $('#next'); if (b) b.disabled = !pageComplete(di); }
+
+    function renderResults(r) {
+      var b = bandOf(r.overall), w = weakest(r), s = strongest(r), prev = null;
+      for (var i = store.history.length - 1; i >= 0; i--) if (store.history[i].ts < r.ts) { prev = store.history[i]; break; }
+      var trend = '';
+      if (prev) { var diff = r.overall - prev.overall; trend = '<p class="trend">' + (diff === 0 ? 'The same as' : (diff > 0 ? 'Up ' + diff + ' points from' : 'Down ' + Math.abs(diff) + ' points from')) + ' your check-in on ' + esc(fmtDate(prev.ts)) + ' (' + prev.overall + '/100).</p>'; }
+      var cards = DOMAINS.map(function (d, i) {
+        return '<div class="dom"><h3 style="color:' + d.color + '"><b style="background:' + d.color + '"></b>' + esc(d.name) + '</h3>' +
+          '<div class="num">' + r.scores[i] + '<small>/100</small></div>' +
+          '<div class="bar-track"><div class="bar-fill" style="width:' + r.scores[i] + '%;background:' + d.color + '"></div></div>' +
+          '<p>' + esc(DOM_TEXT[d.id][tier(r.scores[i])]) + '</p></div>';
+      }).join('');
+      var next = STEPS_TEXT[DOMAINS[w].id].map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('');
+      elCheck.innerHTML =
+        '<p class="eyebrow">Check-in \u00b7 ' + esc(fmtDate(r.ts)) + (store.name ? ' \u00b7 ' + esc(store.name) : '') + '</p>' +
+        '<div class="card" style="margin-top:10px"><div class="hero"><div>' +
+          '<h1 style="font-size:30px;margin-bottom:8px">Here is the shape of your week</h1>' +
+          '<div class="score-big">' + r.overall + '<small>/100 overall</small></div>' +
+          '<p style="margin-top:10px"><span class="pill" style="background:' + b.color + '">' + esc(b.label) + '</span></p>' + trend +
+        '</div><canvas class="radar" id="radar" role="img" aria-label="Chart of your four scores: ' +
+          DOMAINS.map(function (d, i) { return d.name + ' ' + r.scores[i]; }).join(', ') + '"></canvas></div></div>' +
+        '<div class="doms">' + cards + '</div>' +
+        '<div class="block card"><h2>Overall evaluation</h2><p class="lead" style="font-size:16px">' + esc(b.text) + ' Your strongest area is <strong>' + esc(DOMAINS[s].name) + '</strong> (' + r.scores[s] + '), and the area that needs the most care is <strong>' + esc(DOMAINS[w].name) + '</strong> (' + r.scores[w] + ').</p>' +
+          '<div class="verse">\u201c' + esc(b.verse[0]) + '\u201d<span>' + esc(b.verse[1]) + '</span></div></div>' +
+        '<div class="block card"><h2>Small steps for this week</h2><p class="note" style="font-size:14px">Starting with ' + esc(DOMAINS[w].name.toLowerCase()) + ':</p><ul>' + next + '</ul>' +
+          '<p class="note" style="margin-top:10px">You can place these in your week in the Plan step.</p></div>' +
+        '<div class="row" style="margin-top:22px"><button class="btn" id="pdf">Download PDF</button><button class="btn" id="tocare" style="background:#7a64a8">Continue to Care \u2192</button><button class="btn ghost" id="retake">Retake</button></div>' +
+        '<p class="note" style="margin-top:16px">This is a reflective self-check, not a clinical diagnosis or an emergency service.</p>';
+      drawRadar($('#radar'), 840, r.scores, null);
+      state.result = r;
+    }
+
+    function show(page) {
+      state.page = page;
+      if (page === 'intro') renderIntro();
+      else if (page === 'results') renderResults(state.result);
+      else renderQuestions(page);
+      $('#pane-checkin').scrollTop = 0;
+    }
+
+    elCheck.addEventListener('click', function (e) {
+      var id = e.target.id; if (!id) return;
+      if (id === 'start') {
+        var nm = $('#nm'); store.name = nm ? nm.value.trim() : store.name; save(KEY, store);
+        state.answers = new Array(20).fill(null); show(0);
+      } else if (id === 'viewlast') { state.result = store.history[store.history.length - 1]; show('results'); }
+      else if (id === 'clear') { if (confirm('Delete all saved check-ins from this device?')) { store.history = []; save(KEY, store); renderStepper(); show('intro'); } }
+      else if (id === 'back') { show(state.page === 0 ? 'intro' : state.page - 1); }
+      else if (id === 'next') {
+        if (state.page < 3) show(state.page + 1);
+        else {
+          var r = compute(state.answers); store.history.push(r); store.history = store.history.slice(-30); save(KEY, store);
+          state.result = r; renderStepper(); show('results'); renderCare();
+        }
+      }
+      else if (id === 'retake') { state.answers = new Array(20).fill(null); show('intro'); }
+      else if (id === 'tocare') go('care');
+      else if (id === 'pdf') makePdf(state.result);
+    });
+    elCheck.addEventListener('change', function (e) {
+      if (e.target.type === 'radio') { state.answers[+e.target.name.slice(1)] = +e.target.value; updateNext(state.page); }
+    });
+
+    /* ---------- PDF ---------- */
+    function pdfSafe(s) { return String(s).replace(/[\u2018\u2019]/g, "'").replace(/[\u201C\u201D]/g, '"').replace(/[\u2013\u2014]/g, '-').replace(/\u00b7/g, '-').replace(/\u2026/g, '...'); }
+    function hex(h) { return [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)]; }
+    function loadImg(src) { return new Promise(function (res, rej) { var i = new Image(); i.onload = function () { var c = document.createElement('canvas'); c.width = i.naturalWidth; c.height = i.naturalHeight; c.getContext('2d').drawImage(i, 0, 0); res({ data: c.toDataURL('image/png'), w: c.width, h: c.height }); }; i.onerror = rej; i.src = src; }); }
+
+    function makePdf(r) {
+      if (!window.jspdf) { say('The PDF tool did not load. Please reload and try again.'); return; }
+      loadImg('rlcc-logo-white.png').catch(function () { return null; }).then(function (logo) {
+        var jsPDF = window.jspdf.jsPDF, doc = new jsPDF({ unit: 'mm', format: 'a4' });
+        var W = 210, H = 297, M = 18, y = 0, b = bandOf(r.overall), w = weakest(r), s = strongest(r);
+        function ensure(h) { if (y + h > H - 22) { doc.addPage(); y = 22; } }
+        function para(text, size, style, color, gap) {
+          doc.setFont('helvetica', style || 'normal'); doc.setFontSize(size); doc.setTextColor.apply(doc, color || [31, 43, 34]);
+          var lines = doc.splitTextToSize(pdfSafe(text), W - 2 * M), lh = size * 0.42;
+          ensure(lines.length * lh + 2); doc.text(lines, M, y); y += lines.length * lh + (gap == null ? 3 : gap);
+        }
+        function head(text) { ensure(14); doc.setFont('times', 'bold'); doc.setFontSize(14); doc.setTextColor(31, 43, 34); doc.text(pdfSafe(text), M, y); y += 7; }
+
+        doc.setFillColor(54, 82, 51); doc.rect(0, 0, W, 30, 'F');
+        if (logo) { var lw = 64, lh2 = lw * logo.h / logo.w; doc.addImage(logo.data, 'PNG', M, (30 - lh2) / 2, lw, lh2); }
+        y = 46; doc.setFont('times', 'bold'); doc.setFontSize(22); doc.setTextColor(31, 43, 34); doc.text('Daily RPMS Check-in', M, y);
+        var bc = hex(b.color); doc.setFontSize(28); doc.setTextColor(bc[0], bc[1], bc[2]); doc.text(r.overall + '/100', W - M, y, { align: 'right' });
+        y += 7; doc.setFont('helvetica', 'normal'); doc.setFontSize(10.5); doc.setTextColor(102, 114, 106);
+        doc.text('Relational | Physical | Mental-Emotional | Spiritual', M, y);
+        doc.setFont('helvetica', 'bold'); doc.setFontSize(11); doc.setTextColor(bc[0], bc[1], bc[2]); doc.text(pdfSafe(b.label), W - M, y, { align: 'right' });
+        y += 6; doc.setFont('helvetica', 'normal'); doc.setFontSize(10.5); doc.setTextColor(102, 114, 106);
+        doc.text(pdfSafe((store.name ? store.name + '  |  ' : '') + fmtDate(r.ts, true) + ', ' + new Date(r.ts).getFullYear()), M, y);
+
+        var cv = document.createElement('canvas'); drawRadar(cv, 900, r.scores, '#ffffff');
+        doc.addImage(cv.toDataURL('image/png'), 'PNG', (W - 84) / 2, y + 4, 84, 84); y += 94;
+
+        head('Where each domain sits');
+        DOMAINS.forEach(function (d, i) {
+          var col = hex(d.color); ensure(10);
+          doc.setFillColor(col[0], col[1], col[2]); doc.circle(M + 1.8, y - 1.3, 1.6, 'F');
+          doc.setFont('helvetica', 'bold'); doc.setFontSize(10.5); doc.setTextColor(31, 43, 34); doc.text(pdfSafe(d.name), M + 7, y);
+          doc.setFillColor(236, 231, 218); doc.roundedRect(70, y - 3, 70, 3, 1.5, 1.5, 'F');
+          doc.setFillColor(col[0], col[1], col[2]); doc.roundedRect(70, y - 3, Math.max(3, 70 * r.scores[i] / 100), 3, 1.5, 1.5, 'F');
+          doc.setFont('helvetica', 'normal'); doc.text(r.scores[i] + '/100', 145, y); doc.setTextColor(102, 114, 106); doc.text(pdfSafe(bandOf(r.scores[i]).label), 164, y);
+          y += 9;
+        });
+        y += 4; head('Overall evaluation');
+        para(b.text + ' Your strongest area is ' + DOMAINS[s].name + ' (' + r.scores[s] + '), and the area that needs the most care is ' + DOMAINS[w].name + ' (' + r.scores[w] + ').', 10.5);
+        para('"' + b.verse[0] + '" - ' + b.verse[1], 10, 'italic', [74, 87, 77], 6);
+
+        head('What each area is saying');
+        DOMAINS.forEach(function (d, i) { para(d.name + ' (' + r.scores[i] + '): ' + DOM_TEXT[d.id][tier(r.scores[i])], 10.5, 'normal', null, 2.5); });
+        y += 3; head('Small steps for this week');
+        STEPS_TEXT[DOMAINS[w].id].forEach(function (t) { para('-  ' + t, 10.5, 'normal', null, 1.5); });
+        y += 3;
+        var lvl = careLevel(r);
+        para(lvl === 'strong' ? 'Care: We encourage you to request spiritual direction or coaching through Soul Clinic. You do not have to carry this alone.' :
+             lvl === 'suggested' ? 'Care: A conversation could help. Soul Clinic can connect you with spiritual direction or coaching.' :
+             'Care: Soul Clinic is available whenever you would like spiritual direction or coaching.', 10.5, 'bold', [54, 82, 51], 2);
+
+        var n = doc.getNumberOfPages();
+        for (var p = 1; p <= n; p++) {
+          doc.setPage(p); doc.setFont('helvetica', 'normal'); doc.setFontSize(8); doc.setTextColor(140, 148, 142);
+          doc.text('Real Life Christian Communities | 3M. A reflective self-check, not a clinical diagnosis or an emergency service.', M, H - 12);
+          doc.text(p + ' / ' + n, W - M, H - 12, { align: 'right' });
+        }
+        var d0 = new Date(r.ts), stamp = d0.getFullYear() + '-' + ('0' + (d0.getMonth() + 1)).slice(-2) + '-' + ('0' + d0.getDate()).slice(-2);
+        doc.save('RPMS-Check-in-' + stamp + '.pdf');
+      }).catch(function () { say('Sorry, the PDF could not be made. Please try again.'); });
+    }
+
+    /* ---------- Care view ---------- */
+    var elCare = $('#care'), careKey = null;
+    function openUrl(u) { return u ? 'href="' + esc(u) + '" target="_blank" rel="noopener"' : ''; }
+    function renderCare() {
+      var r = store.history[store.history.length - 1], rec = '';
+      var key = r ? r.ts : 'none'; if (key === careKey) return; careKey = key;
+      if (!r) {
+        rec = '<div class="card rec"><p class="eyebrow">Care</p><h2>Start with your check-in</h2><p class="lead" style="font-size:16px">Take the four-minute check-in first so we can suggest what fits you best. You are always welcome to reach Soul Clinic directly as well.</p>' +
+              '<div class="row" style="margin-top:16px"><button class="btn" data-go="checkin">Go to the check-in</button><button class="btn ghost" id="openclinic">Open Soul Clinic anyway</button></div></div>';
+      } else {
+        var lvl = careLevel(r), low = lowDomains(r).join(' and ').toLowerCase(), t, body;
+        if (lvl === 'strong') { t = 'We would love to walk with you'; body = 'Your check-in suggests you may be carrying a lot right now, especially in your ' + low + '. You do not have to carry it alone. We encourage you to request spiritual direction or coaching through Soul Clinic. A ministry leader will review your request and follow up with you.'; }
+        else if (lvl === 'suggested') { t = 'A conversation could help'; body = 'Your check-in shows some areas, especially ' + low + ', where support could make a real difference. Soul Clinic can connect you with spiritual direction or coaching if you would like someone alongside you.'; }
+        else { t = 'You are doing well, and support is still here'; body = 'Your check-in looks healthy. Soul Clinic is here whenever you want spiritual direction or coaching, whether to go deeper or simply to have a companion for the journey.'; }
+        rec = '<div class="card rec ' + lvl + '"><p class="eyebrow">Your check-in \u00b7 ' + r.overall + '/100 \u00b7 ' + esc(bandOf(r.overall).label) + '</p><h2>' + t + '</h2><p class="lead" style="font-size:16px">' + esc(body) + '</p>' +
+              '<div class="row" style="margin-top:16px"><button class="btn" id="openclinic">Ask for spiritual direction or coaching</button><a class="btn ghost" ' + openUrl(CONFIG.CLINIC_URL) + '>Open in a new tab \u2197</a></div></div>';
+      }
+      elCare.innerHTML = rec +
+        '<div class="safety"><strong>Soul Clinic is not an emergency service.</strong> If you or someone else is in immediate danger, contact local emergency services or go to the nearest emergency department right away.</div>' +
+        '<div id="clinicbox"></div>' +
+        '<div class="row" style="margin-top:22px"><button class="btn" data-go="learn">Continue to Learn \u2192</button><button class="btn ghost" data-go="checkin">\u2190 Back to check-in</button></div>';
+    }
+    elCare.addEventListener('click', function (e) {
+      var t = e.target.closest('button'); if (!t) return;
+      if (t.id === 'openclinic') {
+        var box = $('#clinicbox');
+        if (!box.firstChild) {
+          if (!navigator.onLine) { say('You are offline. Connect to the internet to open Soul Clinic.'); return; }
+          box.innerHTML = '<div class="embed"><div class="fstatus"><div class="spinner"></div><div>Opening Soul Clinic\u2026</div></div><iframe title="Soul Clinic" src="' + esc(CONFIG.CLINIC_URL) + '"></iframe></div>';
+          var fr = $('iframe', box); fr.addEventListener('load', function () { var st = $('.fstatus', box); if (st) st.hidden = true; });
+        }
+        box.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else if (t.dataset.go) go(t.dataset.go);
+    });
+
+    /* ---------- Framed tools (Learn, Plan) ---------- */
+    var frames = {};
+    function buildFramePane(id, url, nextStep, nextLabel, emptyMsg) {
+      var pane = $('#pane-' + id);
+      if (!url) {
+        pane.innerHTML = '<div class="wrap"><div class="card"><p class="eyebrow">Coming soon</p><h2 style="margin:6px 0 8px">' + esc(emptyMsg) + '</h2><p class="lead" style="font-size:16px">This step will be available here shortly.</p></div></div>';
+        pane.classList.remove('fr'); frames[id] = true; return;
+      }
+      pane.innerHTML =
+        '<div class="tool"><a class="tbtn" ' + openUrl(url) + '>Open in a new tab \u2197</a><button class="tbtn" data-act="reload">Reload</button><span class="sp"></span>' +
+        (nextStep ? '<button class="tbtn go" data-go="' + nextStep + '">' + esc(nextLabel) + '</button>' : '') + '</div>' +
+        '<div class="fwrap"><div class="fstatus"><div class="spinner"></div><div data-t>Loading\u2026</div></div><iframe title="' + esc(id) + '"></iframe></div>';
+      var fr = $('iframe', pane), st = $('.fstatus', pane), tx = $('[data-t]', pane), slow;
+      function start() {
+        if (!navigator.onLine) { tx.textContent = 'You are offline. Connect to the internet to open this step.'; st.querySelector('.spinner').style.display = 'none'; st.hidden = false; return; }
+        st.querySelector('.spinner').style.display = ''; tx.textContent = 'Loading\u2026'; st.hidden = false; clearTimeout(slow);
+        slow = setTimeout(function () { tx.textContent = 'Still loading\u2026 this can take a few seconds.'; }, 8000);
+        fr.src = url;
+      }
+      fr.addEventListener('load', function () { if (fr.getAttribute('src')) { clearTimeout(slow); st.hidden = true; } });
+      pane.addEventListener('click', function (e) {
+        var a = e.target.closest('[data-act="reload"]'); if (a) { fr.removeAttribute('src'); start(); }
+        var g = e.target.closest('[data-go]'); if (g) go(g.dataset.go);
+      });
+      frames[id] = start; start();
+    }
+
+    /* ---------- Navigation ---------- */
+    var ORDER = ['checkin', 'care', 'learn', 'plan'];
+    function renderStepper() {
+      document.querySelectorAll('.step').forEach(function (b) {
+        var s = b.dataset.step, done = s === 'checkin' ? store.history.length > 0 : !!journey.visited[s];
+        b.classList.toggle('done', done);
+        $('.n', b).textContent = done ? '\u2713' : String(ORDER.indexOf(s) + 1);
       });
     }
+    function go(step) {
+      if (ORDER.indexOf(step) < 0) step = 'checkin';
+      document.querySelectorAll('.pane').forEach(function (p) { p.classList.toggle('active', p.id === 'pane-' + step); });
+      document.querySelectorAll('.step').forEach(function (b) { if (b.dataset.step === step) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current'); });
+      if (step === 'care') renderCare();
+      if (step === 'learn' && !frames.learn) buildFramePane('learn', CONFIG.LEARN_URL, 'plan', 'Next: Plan your week \u2192', 'Learn');
+      if (step === 'plan' && !frames.plan) buildFramePane('plan', CONFIG.WISE_URL, null, '', 'Wise Planning');
+      if (step !== 'checkin') { journey.visited[step] = true; save(JKEY, journey); }
+      renderStepper();
+      if (location.hash !== '#' + step) history.replaceState(null, '', '#' + step);
+      var p = $('#pane-' + step); if (p) p.scrollTop = 0;
+    }
+    document.querySelectorAll('.step').forEach(function (b) { b.addEventListener('click', function () { go(b.dataset.step); }); });
+    window.addEventListener('hashchange', function () { go(location.hash.slice(1)); });
+
+    /* ---------- Start ---------- */
+    renderIntro(); renderStepper();
+    go(location.hash.slice(1) || 'checkin');
+    if ('serviceWorker' in navigator) window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });
+  })();
   </script>
 </body>
 </html>

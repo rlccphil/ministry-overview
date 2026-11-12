@@ -1,7 +1,7 @@
 {
-  "name": "Fulfill our Mission",
-  "short_name": "Our Mission",
-  "description": "A guided walk through the RLCC ministry pathway: REACH, CORE, and LEAD.",
+  "name": "3M: Mission, Multiplication, Movement",
+  "short_name": "3M",
+  "description": "A guided journey for RLCC: check in, find care, learn the pathway, and plan your week.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
