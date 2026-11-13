@@ -166,6 +166,9 @@
     .w-how strong { display: block; }
     .w-how .note { display: block; margin-top: 2px; }
     .w-tips { margin: 6px 0 0; padding-left: 20px; } .w-tips li { margin: 8px 0; }
+    .w-join { border-left: 6px solid #7a64a8; background: #fbf9fe; }
+    .w-join h2 { font-size: 24px; margin: 4px 0 8px; }
+    .w-join p { margin-bottom: 10px; }
 
     @media (max-width: 860px) {
       .burger { display: flex; }
@@ -232,6 +235,7 @@
     var CONFIG = {
       LEARN_URL:  'https://script.google.com/macros/s/AKfycbwsdY4X-7wDP4RuaRz5rGoVEhZU53MiHhSFS3gkGiFLVYMaP67Ap7comLZ-7kJIopJn/exec',
       CLINIC_URL: 'https://rlccphil.github.io/soul-clinic/',
+      VISION_URL:  'https://formation.rlcc.ph/paths/b925a114-f607-4d20-b8a3-099446397595',
       CIRCLES_URL: 'https://rlccphil.github.io/circles/',
       CALLING_URL: 'https://rlccphil.github.io/ministry-deployment/',
       WISE_URL:   'https://rlccphil.github.io/wise-planning/'
@@ -1017,6 +1021,10 @@
         '<p class="eyebrow">Welcome</p>' +
         '<h1 class="greet">Welcome to 5M</h1>' +
         '<p class="lead">5M is a guided journey for the people of Real Life Christian Communities. It walks you from belonging, to being mobilized, to joining God\u2019s mission, to multiplying, and to becoming part of a movement.</p>' +
+        '<div class="card w-join" style="margin-top:22px"><p class="eyebrow">First step</p><h2>Start by joining our church family</h2>' +
+          '<p class="lead" style="font-size:16px">5M begins with Membership. If you are new to Real Life Christian Communities, or you have not yet joined us, the first step is our Vision Seminar. It introduces you to who we are and where God is leading us, and it is the doorway into belonging, serving, and walking with others here.</p>' +
+          '<p class="lead" style="font-size:16px">Take the Vision Seminar first, then come back and join a circle. If you are already part of RLCC, you can go straight to Circles.</p>' +
+          '<div class="row" style="margin-top:14px"><a class="btn" href="' + esc(CONFIG.VISION_URL) + '" target="_blank" rel="noopener noreferrer">Join the Vision Seminar \u2197</a></div></div>' +
         '<div class="row" style="margin-top:18px"><button class="btn" data-go="circles">Begin with Circles \u2192</button>' + resume + '</div>' +
         '<div class="card" style="margin-top:22px"><h2 style="font-size:24px;margin-bottom:14px">What the 5M stands for</h2><ul class="w-ms">' + ms + '</ul></div>' +
         '<div class="card" style="margin-top:16px"><h2 style="font-size:24px;margin-bottom:6px">How to use this app</h2>' +
