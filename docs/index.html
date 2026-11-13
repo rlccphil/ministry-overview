@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>3M | Mission, Multiplication, Movement</title>
-  <meta name="description" content="A guided journey: check in, assess your CHRIST Stages, find care, take the course, and plan your week for the commission.">
+  <meta name="description" content="A guided journey: check in, assess your CHRIST Stages, find care, take the course, discover your calling, and plan your week for the commission.">
   <meta name="theme-color" content="#365233">
 
   <link rel="manifest" href="manifest.webmanifest">
@@ -16,7 +16,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
   <meta property="og:title" content="3M: Mission, Multiplication, Movement">
-  <meta property="og:description" content="A guided journey for RLCC: check in, CHRIST Stages, care, course, and commission.">
+  <meta property="og:description" content="A guided journey for RLCC: check in, CHRIST Stages, care, course, calling, and commission.">
   <meta property="og:image" content="icon-512.png">
 
   <style>
@@ -42,7 +42,7 @@
     .divider { width: 1px; height: 22px; background: rgba(255,255,255,.35); }
     .title { font-weight: 700; font-size: 17px; letter-spacing: .02em; }
     .tagline { font-size: 13px; color: rgba(255,255,255,.78); }
-    .steps { background: #fff; border-bottom: 1px solid var(--line); display: grid; grid-template-columns: repeat(5, 1fr); padding: 0 max(4px, env(safe-area-inset-left, 0px)); }
+    .steps { background: #fff; border-bottom: 1px solid var(--line); display: grid; grid-template-columns: repeat(6, 1fr); padding: 0 max(2px, env(safe-area-inset-left, 0px)); }
     .step { background: none; border: 0; border-bottom: 3px solid transparent; padding: 10px 2px 8px; color: var(--muted); display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 12.5px; font-weight: 600; line-height: 1.2; text-align: center; }
     .step .n { width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid #c9cfc6; display: grid; place-items: center; font-size: 12px; background: #fff; }
     .step.done .n { background: var(--green); border-color: var(--green); color: #fff; }
@@ -150,7 +150,7 @@
     .cs-h { font-size: 11.5px !important; letter-spacing: .12em; text-transform: uppercase; color: var(--muted) !important; font-weight: 700; margin-top: 14px !important; }
     .cs-wall { border-left: 6px solid #5b5b5b; }
     .cs-wall p { margin-top: 8px; } .cs-wall ul { margin: 6px 0 0; padding-left: 20px; }
-    @media (max-width: 520px) { .step { font-size: 11px; } .divider { display: none; } .tagline { display: none; } .card { padding: 18px; } .score-big { font-size: 54px; } }
+    @media (max-width: 520px) { .step { font-size: 10.5px; letter-spacing: -.01em; } .step .n { width: 22px; height: 22px; } .divider { display: none; } .tagline { display: none; } .card { padding: 18px; } .score-big { font-size: 54px; } }
   </style>
 </head>
 <body>
@@ -167,7 +167,8 @@
     <button class="step" data-step="christ"><span class="n">2</span>CHRIST Stages</button>
     <button class="step" data-step="care"><span class="n">3</span>Care</button>
     <button class="step" data-step="course"><span class="n">4</span>Course</button>
-    <button class="step" data-step="commission"><span class="n">5</span>Commission</button>
+    <button class="step" data-step="calling"><span class="n">5</span>Calling</button>
+    <button class="step" data-step="commission"><span class="n">6</span>Commission</button>
   </nav>
 
   <main class="stage">
@@ -175,6 +176,7 @@
     <section class="pane" id="pane-christ" aria-label="CHRIST Stages"><div class="wrap" id="christ"></div></section>
     <section class="pane" id="pane-care" aria-label="Care"><div class="wrap" id="care"></div></section>
     <section class="pane fr" id="pane-course" aria-label="Course"></section>
+    <section class="pane fr" id="pane-calling" aria-label="Calling"></section>
     <section class="pane fr" id="pane-commission" aria-label="Commission"></section>
   </main>
   <div class="toast" id="toast" role="status"></div>
@@ -188,6 +190,7 @@
     var CONFIG = {
       LEARN_URL:  'https://script.google.com/macros/s/AKfycbwsdY4X-7wDP4RuaRz5rGoVEhZU53MiHhSFS3gkGiFLVYMaP67Ap7comLZ-7kJIopJn/exec',
       CLINIC_URL: 'https://rlccphil.github.io/soul-clinic/',
+      CALLING_URL: 'https://rlccphil.github.io/ministry-deployment/',
       WISE_URL:   'https://rlccphil.github.io/wise-planning/'
     };
 
@@ -940,7 +943,7 @@
     }
 
     /* ---------- Navigation ---------- */
-    var ORDER = ['checkin', 'christ', 'care', 'course', 'commission'];
+    var ORDER = ['checkin', 'christ', 'care', 'course', 'calling', 'commission'];
     var ALIAS = { learn: 'course', plan: 'commission' };
     function renderStepper() {
       document.querySelectorAll('.step').forEach(function (b) {
@@ -955,7 +958,8 @@
       document.querySelectorAll('.pane').forEach(function (p) { p.classList.toggle('active', p.id === 'pane-' + step); });
       document.querySelectorAll('.step').forEach(function (b) { if (b.dataset.step === step) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current'); });
       if (step === 'care') renderCare();
-      if (step === 'course' && !frames.course) buildFramePane('course', CONFIG.LEARN_URL, 'commission', 'Next: Commission \u2192', 'Course');
+      if (step === 'course' && !frames.course) buildFramePane('course', CONFIG.LEARN_URL, 'calling', 'Next: Calling \u2192', 'Course');
+      if (step === 'calling' && !frames.calling) buildFramePane('calling', CONFIG.CALLING_URL, 'commission', 'Next: Commission \u2192', 'Calling');
       if (step === 'commission' && !frames.commission) buildFramePane('commission', CONFIG.WISE_URL, null, '', 'Commission');
       if (step !== 'checkin' && step !== 'christ') { journey.visited[step] = true; save(JKEY, journey); }
       renderStepper();
