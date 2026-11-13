@@ -1,7 +1,7 @@
 {
-  "name": "4M: Mobilization, Mission, Multiplication, Movement",
-  "short_name": "4M",
-  "description": "A guided journey for RLCC: check in, find care, learn the pathway, and plan your week.",
+  "name": "5M: Membership, Mobilization, Mission, Multiplication, Movement",
+  "short_name": "5M",
+  "description": "A guided journey for RLCC: circles, check-in, CHRIST Stages, care, course, calling, and commission.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

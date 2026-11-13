@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>4M | Mobilization, Mission, Multiplication, Movement</title>
-  <meta name="description" content="A guided journey: check in, assess your CHRIST Stages, find care, take the course, discover your calling, and plan your week for the commission.">
+  <title>5M | Membership, Mobilization, Mission, Multiplication, Movement</title>
+  <meta name="description" content="A guided journey for RLCC: join a circle, check in, assess your CHRIST Stages, find care, take the course, discover your calling, and plan your week for the commission.">
   <meta name="theme-color" content="#365233">
 
   <link rel="manifest" href="manifest.webmanifest">
@@ -12,11 +12,11 @@
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-title" content="4M">
+  <meta name="apple-mobile-web-app-title" content="5M">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-  <meta property="og:title" content="4M: Mobilization, Mission, Multiplication, Movement">
-  <meta property="og:description" content="A guided journey for RLCC: check in, CHRIST Stages, care, course, calling, and commission.">
+  <meta property="og:title" content="5M: Membership, Mobilization, Mission, Multiplication, Movement">
+  <meta property="og:description" content="A guided journey for RLCC: circles, check-in, CHRIST Stages, care, course, calling, and commission.">
   <meta property="og:image" content="icon-512.png">
 
   <style>
@@ -42,7 +42,12 @@
     .divider { width: 1px; height: 22px; background: rgba(255,255,255,.35); }
     .title { font-weight: 700; font-size: 17px; letter-spacing: .02em; }
     .tagline { font-size: 13px; color: rgba(255,255,255,.78); }
-    .steps { background: #fff; border-bottom: 1px solid var(--line); display: grid; grid-template-columns: repeat(6, 1fr); padding: 0 max(2px, env(safe-area-inset-left, 0px)); }
+    .spacer { flex: 1 1 auto; }
+    .burger { display: none; width: 44px; height: 44px; padding: 0; border: 1px solid rgba(255,255,255,.4); border-radius: 10px; background: transparent; cursor: pointer; flex-direction: column; justify-content: center; align-items: center; gap: 5px; }
+    .burger span { display: block; width: 22px; height: 2px; background: #fff; border-radius: 2px; }
+    .burger:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+    .crumb, .scrim, .menu-close { display: none; }
+    .steps { background: #fff; border-bottom: 1px solid var(--line); display: grid; grid-template-columns: repeat(8, 1fr); padding: 0 max(2px, env(safe-area-inset-left, 0px)); }
     .step { background: none; border: 0; border-bottom: 3px solid transparent; padding: 10px 2px 8px; color: var(--muted); display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 12.5px; font-weight: 600; line-height: 1.2; text-align: center; }
     .step .n { width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid #c9cfc6; display: grid; place-items: center; font-size: 12px; background: #fff; }
     .step.done .n { background: var(--green); border-color: var(--green); color: #fff; }
@@ -150,7 +155,35 @@
     .cs-h { font-size: 11.5px !important; letter-spacing: .12em; text-transform: uppercase; color: var(--muted) !important; font-weight: 700; margin-top: 14px !important; }
     .cs-wall { border-left: 6px solid #5b5b5b; }
     .cs-wall p { margin-top: 8px; } .cs-wall ul { margin: 6px 0 0; padding-left: 20px; }
-    @media (max-width: 520px) { .step { font-size: 10.5px; letter-spacing: -.01em; } .step .n { width: 22px; height: 22px; } .divider { display: none; } .tagline { display: none; } .card { padding: 18px; } .score-big { font-size: 54px; } }
+    /* Welcome */
+    .w-ms { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+    .w-ms li { display: flex; gap: 12px; align-items: flex-start; }
+    .w-ms .cs-dot { margin-top: 2px; }
+    .w-how { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+    .w-how button { width: 100%; text-align: left; display: flex; gap: 14px; align-items: flex-start; padding: 12px 14px; border: 1px solid var(--line); border-radius: 14px; background: #fff; color: inherit; }
+    .w-how button:hover { background: #f1f5ef; }
+    .w-how .n { flex: 0 0 auto; width: 28px; height: 28px; border-radius: 50%; background: var(--green); color: #fff; display: grid; place-items: center; font-size: 13px; font-weight: 700; }
+    .w-how strong { display: block; }
+    .w-how .note { display: block; margin-top: 2px; }
+    .w-tips { margin: 6px 0 0; padding-left: 20px; } .w-tips li { margin: 8px 0; }
+
+    @media (max-width: 860px) {
+      .burger { display: flex; }
+      .tagline { display: none; }
+      .crumb { display: flex; align-items: center; gap: 10px; background: #fff; border-bottom: 1px solid var(--line); padding: 9px max(16px, env(safe-area-inset-left, 0px)); font-size: 13px; color: var(--muted); }
+      .crumb strong { color: var(--ink); font-size: 15px; }
+      .crumb .pos { margin-left: auto; }
+      .steps { position: fixed; top: 0; right: 0; bottom: 0; width: min(84vw, 330px); z-index: 40; display: flex; flex-direction: column; align-items: stretch; padding: calc(env(safe-area-inset-top, 0px) + 10px) 14px calc(env(safe-area-inset-bottom, 0px) + 20px); border: 0; box-shadow: -12px 0 32px rgba(0,0,0,.18); overflow-y: auto; transform: translateX(105%); visibility: hidden; transition: transform .25s ease, visibility 0s linear .25s; }
+      body.menu-open .steps { transform: none; visibility: visible; transition: transform .25s ease, visibility 0s; }
+      .menu-close { display: block; align-self: flex-end; width: 44px; height: 44px; border: 0; background: none; font-size: 32px; line-height: 1; color: var(--green); cursor: pointer; }
+      .step { flex-direction: row; justify-content: flex-start; text-align: left; gap: 14px; padding: 14px 12px; font-size: 16px; border-bottom: 1px solid var(--line); border-left: 4px solid transparent; }
+      .step[aria-current="step"] { border-bottom-color: var(--line); border-left-color: var(--green); background: #f1f5ef; }
+      .scrim { position: fixed; inset: 0; background: rgba(20,30,22,.45); z-index: 30; }
+      body.menu-open .scrim { display: block; }
+      body.menu-open { overflow: hidden; }
+    }
+    @media (prefers-reduced-motion: reduce) { .steps { transition: none !important; } }
+    @media (max-width: 520px) { .divider { display: none; } .card { padding: 18px; } .score-big { font-size: 54px; } }
   </style>
 </head>
 <body>
@@ -158,20 +191,29 @@
     <div class="bar-inner">
       <img class="logo" src="rlcc-logo-white.png" alt="Real Life Christian Communities">
       <span class="divider" aria-hidden="true"></span>
-      <span class="title">4M</span><span class="tagline">Mobilization · Mission · Multiplication · Movement</span>
+      <span class="title">5M</span><span class="tagline">Membership · Mobilization · Mission · Multiplication · Movement</span>
+      <span class="spacer"></span>
+      <button class="burger" id="burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="menu"><span></span><span></span><span></span></button>
     </div>
   </header>
+  <div class="crumb" id="crumb" aria-live="polite"></div>
+  <div class="scrim" id="scrim"></div>
 
-  <nav class="steps" aria-label="Your journey">
-    <button class="step" data-step="checkin"><span class="n">1</span>Check-in</button>
-    <button class="step" data-step="christ"><span class="n">2</span>CHRIST Stages</button>
-    <button class="step" data-step="care"><span class="n">3</span>Care</button>
-    <button class="step" data-step="course"><span class="n">4</span>Course</button>
-    <button class="step" data-step="calling"><span class="n">5</span>Calling</button>
-    <button class="step" data-step="commission"><span class="n">6</span>Commission</button>
+  <nav class="steps" id="menu" aria-label="Your journey">
+    <button class="menu-close" id="menuClose" type="button" aria-label="Close menu">×</button>
+    <button class="step" data-step="welcome"><span class="n">1</span>Welcome</button>
+    <button class="step" data-step="circles"><span class="n">2</span>Circles</button>
+    <button class="step" data-step="checkin"><span class="n">3</span>Check-in</button>
+    <button class="step" data-step="christ"><span class="n">4</span>CHRIST Stages</button>
+    <button class="step" data-step="care"><span class="n">5</span>Care</button>
+    <button class="step" data-step="course"><span class="n">6</span>Course</button>
+    <button class="step" data-step="calling"><span class="n">7</span>Calling</button>
+    <button class="step" data-step="commission"><span class="n">8</span>Commission</button>
   </nav>
 
   <main class="stage">
+    <section class="pane" id="pane-welcome" aria-label="Welcome"><div class="wrap" id="welcome"></div></section>
+    <section class="pane fr" id="pane-circles" aria-label="Circles"></section>
     <section class="pane" id="pane-checkin" aria-label="Check-in"><div class="wrap" id="checkin"></div></section>
     <section class="pane" id="pane-christ" aria-label="CHRIST Stages"><div class="wrap" id="christ"></div></section>
     <section class="pane" id="pane-care" aria-label="Care"><div class="wrap" id="care"></div></section>
@@ -190,6 +232,7 @@
     var CONFIG = {
       LEARN_URL:  'https://script.google.com/macros/s/AKfycbwsdY4X-7wDP4RuaRz5rGoVEhZU53MiHhSFS3gkGiFLVYMaP67Ap7comLZ-7kJIopJn/exec',
       CLINIC_URL: 'https://rlccphil.github.io/soul-clinic/',
+      CIRCLES_URL: 'https://rlccphil.github.io/circles/',
       CALLING_URL: 'https://rlccphil.github.io/ministry-deployment/',
       WISE_URL:   'https://rlccphil.github.io/wise-planning/'
     };
@@ -490,7 +533,7 @@
         var n = doc.getNumberOfPages();
         for (var p = 1; p <= n; p++) {
           doc.setPage(p); doc.setFont('helvetica', 'normal'); doc.setFontSize(8); doc.setTextColor(140, 148, 142);
-          doc.text('Real Life Christian Communities | 4M. A reflective self-check, not a clinical diagnosis or an emergency service.', M, H - 12);
+          doc.text('Real Life Christian Communities | 5M. A reflective self-check, not a clinical diagnosis or an emergency service.', M, H - 12);
           doc.text(p + ' / ' + n, W - M, H - 12, { align: 'right' });
         }
         var d0 = new Date(r.ts), stamp = d0.getFullYear() + '-' + ('0' + (d0.getMonth() + 1)).slice(-2) + '-' + ('0' + d0.getDate()).slice(-2);
@@ -864,7 +907,7 @@
         var n = doc.getNumberOfPages();
         for (var p = 1; p <= n; p++) {
           doc.setPage(p); doc.setFont('helvetica', 'normal'); doc.setFontSize(8); doc.setTextColor(140, 148, 142);
-          doc.text('Real Life Christian Communities | 4M | CHRIST Stages framework: Soul Shepherding | A reflective self-check, not a diagnosis', M, H - 12);
+          doc.text('Real Life Christian Communities | 5M | CHRIST Stages framework: Soul Shepherding | A reflective self-check, not a diagnosis', M, H - 12);
           doc.text(p + ' / ' + n, W - M, H - 12, { align: 'right' });
         }
         var d0 = new Date(r.ts), stamp = d0.getFullYear() + '-' + ('0' + (d0.getMonth() + 1)).slice(-2) + '-' + ('0' + d0.getDate()).slice(-2);
@@ -942,8 +985,54 @@
       frames[id] = start; start();
     }
 
+    /* ---------- Welcome ---------- */
+    var MS = [
+      ['Membership', 'Belonging to Christ\u2019s family and to a circle of people who know you and walk with you.', '#4a7fb0'],
+      ['Mobilization', 'Equipping every believer to find a place to serve, and sending them out.', '#5b8a67'],
+      ['Mission', 'Joining God\u2019s mission to reach people and bring them to Christ.', '#c39a3a'],
+      ['Multiplication', 'Making disciples who make disciples, again and again.', '#b4654a'],
+      ['Movement', 'Becoming a growing, self-sustaining movement of ministries and communities.', '#7a64a8']
+    ];
+    var HOW = [
+      ['circles', 'Circles', 'Join a circle, or request one, so that you are not walking alone.'],
+      ['checkin', 'Check-in', 'A four-minute Daily RPMS check on your relational, physical, mental-emotional, and spiritual health.'],
+      ['christ', 'CHRIST Stages', 'Assess six dimensions of a healthy soul, and download a summary to keep or to share with a supervisor.'],
+      ['care', 'Care', 'Ask for spiritual direction or coaching through Soul Clinic whenever you would like someone alongside you.'],
+      ['course', 'Course', 'Walk the REACH, CORE, and LEAD pathway, and keep turning each step again like a flywheel.'],
+      ['calling', 'Calling', 'Discover your ministry calling.'],
+      ['commission', 'Commission', 'Plan your week with Wise Planning, so that what you learn becomes what you live.']
+    ];
+    var STEP_LABEL = { welcome: 'Welcome', circles: 'Circles', checkin: 'Check-in', christ: 'CHRIST Stages', care: 'Care', course: 'Course', calling: 'Calling', commission: 'Commission' };
+    var elWelcome = $('#welcome');
+    function renderWelcome() {
+      var ms = MS.map(function (m, i) {
+        return '<li><span class="cs-dot" style="background:' + m[2] + '">' + (i + 1) + '</span><span><strong>' + esc(m[0]) + '</strong><br><span class="note">' + esc(m[1]) + '</span></span></li>';
+      }).join('');
+      var how = HOW.map(function (h, i) {
+        return '<li><button type="button" data-go="' + h[0] + '"><span class="n">' + (i + 1) + '</span><span><strong>' + esc(h[1]) + '</strong><span class="note">' + esc(h[2]) + '</span></span></button></li>';
+      }).join('');
+      var resume = (journey.last && STEP_LABEL[journey.last] && journey.last !== 'welcome')
+        ? '<button class="btn ghost" data-go="' + esc(journey.last) + '">Continue where you left off: ' + esc(STEP_LABEL[journey.last]) + '</button>' : '';
+      elWelcome.innerHTML =
+        '<p class="eyebrow">Welcome</p>' +
+        '<h1 class="greet">Welcome to 5M</h1>' +
+        '<p class="lead">5M is a guided journey for the people of Real Life Christian Communities. It walks you from belonging, to being mobilized, to joining God\u2019s mission, to multiplying, and to becoming part of a movement.</p>' +
+        '<div class="row" style="margin-top:18px"><button class="btn" data-go="circles">Begin with Circles \u2192</button>' + resume + '</div>' +
+        '<div class="card" style="margin-top:22px"><h2 style="font-size:24px;margin-bottom:14px">What the 5M stands for</h2><ul class="w-ms">' + ms + '</ul></div>' +
+        '<div class="card" style="margin-top:16px"><h2 style="font-size:24px;margin-bottom:6px">How to use this app</h2>' +
+          '<p class="note" style="margin-bottom:12px">Each step below is a tab. Tap any of them to open it.</p><ol class="w-how">' + how + '</ol></div>' +
+        '<div class="card" style="margin-top:16px"><h2 style="font-size:24px;margin-bottom:6px">A few things to know</h2><ul class="w-tips">' +
+          '<li>Go in order the first time, or jump to any step. You can come back to any of them at any time.</li>' +
+          '<li>Your Check-in and CHRIST Stages answers stay on your own device. You can download them as PDFs to keep, or to share with a supervisor or coach.</li>' +
+          '<li>Circles, Course, Calling, Care, and Commission open right inside 5M. What you enter in them is saved by those tools.</li>' +
+          '<li>On a phone, tap the menu button at the top right to move between steps. To keep 5M like an app, use your browser\u2019s Add to Home Screen.</li>' +
+        '</ul></div>' +
+        '<div class="verse">\u201cGo ye therefore, and teach all nations \u2026 and, lo, I am with you alway, even unto the end of the world.\u201d<span>Matthew 28:19\u201320 (KJV)</span></div>';
+    }
+    elWelcome.addEventListener('click', function (e) { var g = e.target.closest('[data-go]'); if (g) go(g.dataset.go); });
+
     /* ---------- Navigation ---------- */
-    var ORDER = ['checkin', 'christ', 'care', 'course', 'calling', 'commission'];
+    var ORDER = ['welcome', 'circles', 'checkin', 'christ', 'care', 'course', 'calling', 'commission'];
     var ALIAS = { learn: 'course', plan: 'commission' };
     function renderStepper() {
       document.querySelectorAll('.step').forEach(function (b) {
@@ -952,17 +1041,41 @@
         $('.n', b).textContent = done ? '\u2713' : String(ORDER.indexOf(s) + 1);
       });
     }
-    function go(step) {
+
+    /* Hamburger menu (phones and small tablets) */
+    var burger = $('#burger'), menuClose = $('#menuClose');
+    function setMenu(open, returnFocus) {
+      document.body.classList.toggle('menu-open', open);
+      burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+      burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+      if (open) { var cur = $('.step[aria-current="step"]') || $('.step'); if (cur) setTimeout(function () { cur.focus(); }, 60); }
+      else if (returnFocus) burger.focus();
+    }
+    burger.addEventListener('click', function () { setMenu(!document.body.classList.contains('menu-open'), true); });
+    menuClose.addEventListener('click', function () { setMenu(false, true); });
+    $('#scrim').addEventListener('click', function () { setMenu(false, true); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && document.body.classList.contains('menu-open')) setMenu(false, true); });
+    window.addEventListener('resize', function () { if (window.innerWidth > 860 && document.body.classList.contains('menu-open')) setMenu(false, false); });
+
+    function go(step, auto) {
       step = ALIAS[step] || step;
-      if (ORDER.indexOf(step) < 0) step = 'checkin';
+      if (ORDER.indexOf(step) < 0) step = 'welcome';
       document.querySelectorAll('.pane').forEach(function (p) { p.classList.toggle('active', p.id === 'pane-' + step); });
       document.querySelectorAll('.step').forEach(function (b) { if (b.dataset.step === step) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current'); });
+      if (step === 'welcome') renderWelcome();
+      if (step === 'circles' && !frames.circles) buildFramePane('circles', CONFIG.CIRCLES_URL, 'checkin', 'Next: Check-in \u2192', 'Circles');
       if (step === 'care') renderCare();
       if (step === 'course' && !frames.course) buildFramePane('course', CONFIG.LEARN_URL, 'calling', 'Next: Calling \u2192', 'Course');
       if (step === 'calling' && !frames.calling) buildFramePane('calling', CONFIG.CALLING_URL, 'commission', 'Next: Commission \u2192', 'Calling');
       if (step === 'commission' && !frames.commission) buildFramePane('commission', CONFIG.WISE_URL, null, '', 'Commission');
-      if (step !== 'checkin' && step !== 'christ') { journey.visited[step] = true; save(JKEY, journey); }
+      if (!auto) {
+        if (step !== 'checkin' && step !== 'christ') journey.visited[step] = true;
+        if (step !== 'welcome') journey.last = step;
+        save(JKEY, journey);
+      }
       renderStepper();
+      $('#crumb').innerHTML = '<strong>' + esc(STEP_LABEL[step]) + '</strong><span class="pos">' + (ORDER.indexOf(step) + 1) + ' of ' + ORDER.length + '</span>';
+      if (document.body.classList.contains('menu-open')) setMenu(false, true);
       if (location.hash !== '#' + step) history.replaceState(null, '', '#' + step);
       var p = $('#pane-' + step); if (p) p.scrollTop = 0;
     }
@@ -971,7 +1084,7 @@
 
     /* ---------- Start ---------- */
     renderIntro(); csRenderIntro(); renderStepper();
-    go(location.hash.slice(1) || 'checkin');
+    go(location.hash.slice(1) || 'welcome', true);
     if ('serviceWorker' in navigator) window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });
   })();
   </script>
