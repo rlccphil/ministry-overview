@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>3M | Mission, Multiplication, Movement</title>
-  <meta name="description" content="A guided journey: check in on your whole self, find care, walk the REACH, CORE, and LEAD pathway, and plan your week.">
+  <meta name="description" content="A guided journey: check in, assess your CHRIST Stages, find care, take the course, and plan your week for the commission.">
   <meta name="theme-color" content="#365233">
 
   <link rel="manifest" href="manifest.webmanifest">
@@ -16,7 +16,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
   <meta property="og:title" content="3M: Mission, Multiplication, Movement">
-  <meta property="og:description" content="A guided journey for RLCC: check in, find care, learn the pathway, and plan your week.">
+  <meta property="og:description" content="A guided journey for RLCC: check in, CHRIST Stages, care, course, and commission.">
   <meta property="og:image" content="icon-512.png">
 
   <style>
@@ -42,8 +42,8 @@
     .divider { width: 1px; height: 22px; background: rgba(255,255,255,.35); }
     .title { font-weight: 700; font-size: 17px; letter-spacing: .02em; }
     .tagline { font-size: 13px; color: rgba(255,255,255,.78); }
-    .steps { background: #fff; border-bottom: 1px solid var(--line); display: grid; grid-template-columns: repeat(4, 1fr); padding: 0 max(6px, env(safe-area-inset-left, 0px)); }
-    .step { background: none; border: 0; border-bottom: 3px solid transparent; padding: 10px 4px 8px; color: var(--muted); display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 12.5px; font-weight: 600; }
+    .steps { background: #fff; border-bottom: 1px solid var(--line); display: grid; grid-template-columns: repeat(5, 1fr); padding: 0 max(4px, env(safe-area-inset-left, 0px)); }
+    .step { background: none; border: 0; border-bottom: 3px solid transparent; padding: 10px 2px 8px; color: var(--muted); display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 12.5px; font-weight: 600; line-height: 1.2; text-align: center; }
     .step .n { width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid #c9cfc6; display: grid; place-items: center; font-size: 12px; background: #fff; }
     .step.done .n { background: var(--green); border-color: var(--green); color: #fff; }
     .step[aria-current="step"] { color: var(--green); border-bottom-color: var(--green); }
@@ -134,7 +134,23 @@
     @media (prefers-reduced-motion: reduce) { .spinner { animation-duration: 3s; } }
     .toast { position: fixed; left: 50%; bottom: calc(env(safe-area-inset-bottom, 0px) + 20px); transform: translateX(-50%); background: #1f2b22; color: #fff; padding: 9px 16px; border-radius: 999px; font-size: 13px; opacity: 0; pointer-events: none; transition: opacity .2s; z-index: 10; }
     .toast.show { opacity: 1; }
-    @media (max-width: 520px) { .divider { display: none; } .tagline { display: none; } .card { padding: 18px; } .score-big { font-size: 54px; } }
+    /* CHRIST Stages */
+    .cs-legend { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+    .cs-legend li { display: flex; gap: 12px; align-items: center; }
+    .cs-dot { flex: 0 0 auto; width: 34px; height: 34px; border-radius: 50%; color: #fff; display: grid; place-items: center; font: 700 14px var(--serif); }
+    .cs-rb { margin: 4px 0 22px; padding: 14px 16px; background: #fffaf6; border: 1.5px dashed #d9b8a8; border-radius: 14px; }
+    .cs-dims { display: grid; gap: 12px; }
+    .cs-dim { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 4px 16px 16px; }
+    .cs-dim > summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 12px; padding: 12px 0; }
+    .cs-dim > summary::-webkit-details-marker { display: none; }
+    .cs-sum { flex: 1; display: grid; gap: 2px; }
+    .cs-score { font: 700 28px var(--serif); }
+    .cs-dim p { margin: 8px 0 0; font-size: 15px; color: #3c4a3f; }
+    .cs-dim ul { margin: 6px 0 0; padding-left: 20px; font-size: 15px; color: #3c4a3f; }
+    .cs-h { font-size: 11.5px !important; letter-spacing: .12em; text-transform: uppercase; color: var(--muted) !important; font-weight: 700; margin-top: 14px !important; }
+    .cs-wall { border-left: 6px solid #5b5b5b; }
+    .cs-wall p { margin-top: 8px; } .cs-wall ul { margin: 6px 0 0; padding-left: 20px; }
+    @media (max-width: 520px) { .step { font-size: 11px; } .divider { display: none; } .tagline { display: none; } .card { padding: 18px; } .score-big { font-size: 54px; } }
   </style>
 </head>
 <body>
@@ -148,16 +164,18 @@
 
   <nav class="steps" aria-label="Your journey">
     <button class="step" data-step="checkin"><span class="n">1</span>Check-in</button>
-    <button class="step" data-step="care"><span class="n">2</span>Care</button>
-    <button class="step" data-step="learn"><span class="n">3</span>Learn</button>
-    <button class="step" data-step="plan"><span class="n">4</span>Plan</button>
+    <button class="step" data-step="christ"><span class="n">2</span>CHRIST Stages</button>
+    <button class="step" data-step="care"><span class="n">3</span>Care</button>
+    <button class="step" data-step="course"><span class="n">4</span>Course</button>
+    <button class="step" data-step="commission"><span class="n">5</span>Commission</button>
   </nav>
 
   <main class="stage">
     <section class="pane" id="pane-checkin" aria-label="Check-in"><div class="wrap" id="checkin"></div></section>
+    <section class="pane" id="pane-christ" aria-label="CHRIST Stages"><div class="wrap" id="christ"></div></section>
     <section class="pane" id="pane-care" aria-label="Care"><div class="wrap" id="care"></div></section>
-    <section class="pane fr" id="pane-learn" aria-label="Learn"></section>
-    <section class="pane fr" id="pane-plan" aria-label="Plan"></section>
+    <section class="pane fr" id="pane-course" aria-label="Course"></section>
+    <section class="pane fr" id="pane-commission" aria-label="Commission"></section>
   </main>
   <div class="toast" id="toast" role="status"></div>
 
@@ -373,8 +391,8 @@
         '<div class="block card"><h2>Overall evaluation</h2><p class="lead" style="font-size:16px">' + esc(b.text) + ' Your strongest area is <strong>' + esc(DOMAINS[s].name) + '</strong> (' + r.scores[s] + '), and the area that needs the most care is <strong>' + esc(DOMAINS[w].name) + '</strong> (' + r.scores[w] + ').</p>' +
           '<div class="verse">\u201c' + esc(b.verse[0]) + '\u201d<span>' + esc(b.verse[1]) + '</span></div></div>' +
         '<div class="block card"><h2>Small steps for this week</h2><p class="note" style="font-size:14px">Starting with ' + esc(DOMAINS[w].name.toLowerCase()) + ':</p><ul>' + next + '</ul>' +
-          '<p class="note" style="margin-top:10px">You can place these in your week in the Plan step.</p></div>' +
-        '<div class="row" style="margin-top:22px"><button class="btn" id="pdf">Download PDF</button><button class="btn" id="tocare" style="background:#7a64a8">Continue to Care \u2192</button><button class="btn ghost" id="retake">Retake</button></div>' +
+          '<p class="note" style="margin-top:10px">You can place these in your week in the Commission step.</p></div>' +
+        '<div class="row" style="margin-top:22px"><button class="btn" id="pdf">Download PDF</button><button class="btn" id="tocare" style="background:#7a64a8">Continue to CHRIST Stages \u2192</button><button class="btn ghost" id="retake">Retake</button></div>' +
         '<p class="note" style="margin-top:16px">This is a reflective self-check, not a clinical diagnosis or an emergency service.</p>';
       drawRadar($('#radar'), 840, r.scores, null);
       state.result = r;
@@ -404,7 +422,7 @@
         }
       }
       else if (id === 'retake') { state.answers = new Array(20).fill(null); show('intro'); }
-      else if (id === 'tocare') go('care');
+      else if (id === 'tocare') go('christ');
       else if (id === 'pdf') makePdf(state.result);
     });
     elCheck.addEventListener('change', function (e) {
@@ -477,27 +495,409 @@
       }).catch(function () { say('Sorry, the PDF could not be made. Please try again.'); });
     }
 
+    /* =====================================================================
+     * CHRIST Stages self-assessment
+     * Six dimensions of a healthy soul. The goal is to be healthy in all six,
+     * not to graduate from one to the next. The Wall is not a seventh stage:
+     * it is what forms when a roadblock in any dimension goes unattended.
+     * Questions and feedback are written for RLCC, drawing on the CHRIST Stages
+     * framework taught by Soul Shepherding (soulshepherding.org).
+     * ===================================================================== */
+    var CHRIST = [
+      { code: 'C', name: 'Confidence in Christ', short: 'Confidence', color: '#4a7fb0',
+        desc: 'Resting in God\u2019s love and forgiveness, secure as His child.',
+        qs: ['I believe God loves me and is pleased to be my Father, even on days when I fail.',
+             'When I sin, I confess it honestly and receive God\u2019s forgiveness instead of hiding or punishing myself.',
+             'I can point to specific moments when I have experienced God\u2019s goodness in my own story.',
+             'I thank God freely and often for what He has done for me.'],
+        roadblock: { name: 'Falling into the same sins again and again', q: 'I keep falling back into the same sins, and I often feel guilty or unsure that God is still for me.' },
+        empathy: 'You may be carrying guilt or insecurity, and wondering whether God is disappointed in you. That weight is real, and you are not the first believer to feel stuck in the struggle Paul describes in Romans 7. Your standing with God rests on what Christ has done, not on how well you performed this week.',
+        celebrate: 'You are standing on the security of God\u2019s love and forgiveness. That confidence is a gift to enjoy, and a gift to pass on to those who are new in the faith.',
+        practices: ['Spend unhurried time in nature and thank God for what you see', 'Read the stories of Jesus welcoming sinners and picture yourself among them', 'Practice honest confession with God, and with a trusted friend when you need to', 'Keep a simple list of prayer requests and answers', 'End each day naming three things to be thankful for'],
+        ministry: 'Serve in simple, low-pressure ways such as welcoming newcomers, helping with children, or supporting worship, and be ready to share your story of coming to Christ.' },
+      { code: 'H', name: 'Habits of Discipleship', short: 'Habits', color: '#5b8a67',
+        desc: 'Building steady habits of following Jesus, together with others.',
+        qs: ['I have regular rhythms of Bible reading and prayer that I keep without pressure or guilt.',
+             'I belong to a small group or friendship where I am known, taught, and encouraged to follow Jesus.',
+             'Someone more mature in the faith is walking with me and helping me grow.',
+             'When temptation or discouragement comes, I know how to stand against it with Scripture and prayer.'],
+        roadblock: { name: 'Slipping into legalism', q: 'My faith often feels like a list of rules to keep, and I swing between strong zeal and discouragement.' },
+        empathy: 'You may be trying hard to measure up, and feeling the swing between zeal and discouragement. Habits are meant to carry you toward Jesus, not to prove yourself to Him. Grace leaves room for slow, steady growth.',
+        celebrate: 'You have built healthy habits and good company for the journey. Keep them joyful and unforced, and keep inviting others in.',
+        practices: ['Read Scripture slowly in small portions, asking what each passage shows you of Jesus', 'Stay committed to a small group where you are known', 'Meet regularly with someone who can disciple you', 'Learn to resist temptation and discouragement through prayer and the Word'],
+        ministry: 'Begin helping newer believers take their first steps, or teach a Bible study with a mentor beside you.' },
+      { code: 'R', name: 'Responsibilities in Ministry', short: 'Serving', color: '#c39a3a',
+        desc: 'Using your gifts to serve, pray for, and lead others.',
+        qs: ['I serve in a way that fits the gifts God has given me.',
+             'I pray regularly, by name, for the people I serve or lead.',
+             'I share my faith, or invite people toward Christ, naturally in everyday life.',
+             'I give my time and money generously as an act of worship.'],
+        roadblock: { name: 'Overdoing spiritual activity', q: 'I am so busy with ministry that I am running on empty, or I measure my worth by how much I do.' },
+        empathy: 'You may be tired and stretched thin, or tying your worth to how much you produce. Your service matters to God, but He loves you apart from it. Rest and healthy limits protect your ministry rather than weaken it.',
+        celebrate: 'You are serving with your gifts and with a generous heart. Keep your pace sustainable so you can serve for the long run.',
+        practices: ['Name your spiritual gifts and serve where they fit', 'Pray for the people you serve by name', 'Give generously, including your tithe, as worship', 'Share the Gospel in ordinary conversations', 'Say no to one thing so that your yes can be wholehearted'],
+        ministry: 'Serve or lead a team in an area that fits your gifts, and receive coaching as you go.' },
+      { code: 'I', name: 'Intimacy with Christ', short: 'Intimacy', color: '#b4654a',
+        desc: 'Drawing near to Christ through prayer, honesty, and rest.',
+        qs: ['I make room to be quiet with God and simply enjoy His presence, with no agenda.',
+             'I bring my honest feelings and unmet longings to God instead of hiding them.',
+             'I have at least one soul friend with whom I can be completely honest about my inner life.',
+             'I keep a regular rhythm of Sabbath rest, to receive from God and not only to serve Him.'],
+        roadblock: { name: 'Denying your emotions and needs', q: 'I tend to push down my feelings and needs, and I rarely stop to pay attention to my inner life.' },
+        empathy: 'You may be holding feelings or longings you have not yet had room to bring to God. As you slow down, some of it may feel uncomfortable, even while your desire for Him grows. God meets you in the honest places.',
+        celebrate: 'Your inner life is being nourished by honest, restful time with God and with trusted friends. Keep guarding that space.',
+        practices: ['Pray the Psalms and let them give words to your real feelings', 'Build a soul friendship where you can be fully honest', 'Practice quiet prayer and slow, prayerful reading of Scripture (Lectio Divina)', 'Keep a weekly Sabbath and, at times, fast', 'Read a devotional classic slowly', 'Ask someone to pray with you for inner healing'],
+        ministry: 'Care ministry, spiritual formation, or listening and counseling roles, so you can walk with others through their inner journeys.' },
+      { code: 'S', name: 'Spirit-Led Ministry', short: 'Spirit-led', color: '#7a64a8',
+        desc: 'Following the Spirit\u2019s lead and releasing outcomes to God.',
+        qs: ['I listen for God\u2019s guidance before I act, and I follow it even when it costs me.',
+             'I can hand the results of my ministry to God and still be at peace.',
+             'I serve and pray in hidden ways, without needing to be noticed.',
+             'I bless and pray for people I could be tempted to compete with or criticize.'],
+        roadblock: { name: 'Feeling like an outsider in church', q: 'I feel like an outsider in church, or I am disappointed that few seem to share my depth.' },
+        empathy: 'You may feel disappointed in the church, or sense that few share your depth. That loneliness is real. Ask God where He wants you planted and whom He wants you to love, and do not carry it alone.',
+        celebrate: 'You are learning to lead and serve by the Spirit\u2019s guidance, and to leave the results to God. Others will be helped by the freedom you carry.',
+        practices: ['Hand the results of your work to God in prayer', 'Listen for God\u2019s voice before you plan', 'Abide with God in prayer through the day', 'Do good in secret', 'Bless and pray for those who compete with you or disagree with you'],
+        ministry: 'Offer spiritual direction, lead a retreat, or serve as an elder or in another spiritual leadership role.' },
+      { code: 'T', name: 'Transforming Union', short: 'Union', color: '#2f7f86',
+        desc: 'Living in loving union with the Triune God, so that love overflows into life.',
+        qs: ['I turn ordinary activities, such as work, walking, or conversations, into prayer.',
+             'I am growing in love for the Father, the Son, and the Spirit.',
+             'I stay committed to my church family and love people at every stage of faith, including those very different from me.',
+             'I respond to people who mistreat me with blessing, and I offer love that costs me something, gladly.'],
+        roadblock: { name: 'Making Jesus less central', q: 'I sometimes value spiritual experiences or ideas more than Jesus Himself, and I feel misunderstood by others.' },
+        empathy: 'You may feel different, or sense that others do not understand you. A deeper life with God can feel lonely at times. Stay rooted in Jesus, and stay close to your church family, who need what God is growing in you.',
+        celebrate: 'Love for God and people is flowing through your ordinary days. Your quiet, prayerful presence is a blessing to everyone around you.',
+        practices: ['Turn daily tasks into short prayers', 'Practice contemplative prayer and delight in the Father, Son, and Spirit', 'Stay actively engaged in your church', 'Bless those who mistreat you', 'Offer small, joyful sacrifices of love'],
+        ministry: 'Be a loving, prayerful presence for people at every stage of the journey.' }
+    ];
+    var WALL = {
+      intro: 'The Wall is not a stage you must pass through, and it is not a sign of failure. It is what can form, at any point in any dimension, when a roadblock goes unnoticed or unattended for a long time.',
+      qs: ['I feel spiritually dry or far from God, and the things that used to nourish me no longer do.',
+           'I feel resentful, worn out, or let down by church, ministry, or God, and I am tempted to pull away.',
+           'I feel isolated from caring Christians, or I find it hard to trust God or the faith I once held.'],
+      empathy: 'You may feel spiritually dry, worn out from giving, or alone among people who do not seem to understand. If you are doubting God or the faith you once held, you are not failing. A Wall often forms when a roadblock has gone unattended for a long time, and it can become a doorway into a deeper, humbler trust.',
+      practices: ['Tell someone safe how you honestly feel, and ask for their empathy', 'Pray the psalms of lament and let God hear your real words', 'Meet with a coach or spiritual director', 'Set healthy limits and take real rest', 'Tell the story of God\u2019s faithfulness to you so far', 'If you have carried a heavy load for years, consider a longer season of rest']
+    };
+    var CS_PROMPTS = [
+      'Which roadblock feels most true of me right now, and how long has it been there?',
+      'Where am I strongest, and how can I use that to serve others?',
+      'What one soul care practice will I try this month, and who will ask me about it?',
+      'Is there any sign of a Wall that I need to name out loud?'
+    ];
+    var CSKEY = 'rlcc_christ_v1';
+    var cs = load(CSKEY, { history: [] });
+
+    function csBand(h) { return h < 40 ? { label: 'Needs attention', color: '#a4493d' } : h < 70 ? { label: 'Growing', color: '#b8832f' } : { label: 'Healthy', color: '#2f6b4f' }; }
+    function csRb(v) { return v >= 4 ? 'present' : v === 3 ? 'watch' : 'clear'; }
+    var CS_RB_LABEL = { present: 'Roadblock present', watch: 'Roadblock to watch', clear: 'Roadblock clear' };
+    var CS_RB_COLOR = { present: '#a4493d', watch: '#b8832f', clear: '#2f6b4f' };
+
+    function csCompute(ans) {
+      var dims = CHRIST.map(function (d, i) {
+        var sum = 0; for (var k = 0; k < 4; k++) sum += ans[i * 5 + k];
+        var rb = ans[i * 5 + 4];
+        return { health: Math.round(((sum / 4) - 1) / 4 * 100), rb: rb, rbStatus: csRb(rb) };
+      });
+      var wavg = (ans[30] + ans[31] + ans[32]) / 3;
+      var active = dims.filter(function (d) { return d.rb >= 4; }).length;
+      var blocked = dims.filter(function (d) { return d.rb >= 4 && d.health < 60; }).length;
+      var level = (wavg >= 3.7 || (wavg >= 3 && active >= 2)) ? 'strong' : (wavg >= 2.7 || active >= 2 || blocked >= 1) ? 'some' : 'none';
+      return { ts: Date.now(), answers: ans.slice(), dims: dims, wallAvg: Math.round(wavg * 10) / 10, wallLevel: level };
+    }
+    function csSummary(r) {
+      var order = [0, 1, 2, 3, 4, 5].sort(function (a, b) { return r.dims[a].health - r.dims[b].health; });
+      var weakest = order[0], strongest = order[5];
+      var healthy = r.dims.filter(function (d) { return d.health >= 70; }).length;
+      var focus = weakest, best = null;
+      r.dims.forEach(function (d, i) { if (d.rb >= 4 && d.health < 70 && (best === null || d.health < r.dims[best].health)) best = i; });
+      if (best !== null) focus = best;
+      var roadblocks = [];
+      r.dims.forEach(function (d, i) { if (d.rb >= 4) roadblocks.push(i); });
+      return { weakest: weakest, strongest: strongest, healthy: healthy, focus: focus, roadblocks: roadblocks };
+    }
+    var CS_WALL_LABEL = { strong: 'Wall signs are strong', some: 'Wall signs are showing', none: 'No strong Wall signs' };
+    var CS_WALL_COLOR = { strong: '#a4493d', some: '#b8832f', none: '#2f6b4f' };
+
+    function csOverall(r) {
+      var s = csSummary(r), wk = CHRIST[s.weakest], st = CHRIST[s.strongest], t;
+      if (s.healthy >= 5) t = 'Your answers show healthy footing in ' + s.healthy + ' of the six dimensions. That is a good place to be, and a place to stay humble and watchful.';
+      else if (s.healthy >= 3) t = 'Your answers show healthy footing in ' + s.healthy + ' of the six dimensions, with room to grow in the rest.';
+      else t = 'Your answers show that most of the six dimensions could use care right now. That is honest information, not a verdict, and you are not meant to carry it alone.';
+      if (r.dims[s.weakest].health >= 70) {
+        t += ' Your strongest dimension is ' + st.name + ' (' + r.dims[s.strongest].health + '), and even your lowest, ' + wk.name + ' (' + r.dims[s.weakest].health + '), is on healthy ground. ' +
+          'The call now is to keep all six healthy together, and not to leave any of them behind.';
+      } else {
+        t += ' Your strongest dimension is ' + st.name + ' (' + r.dims[s.strongest].health + '), and the one asking for the most attention is ' + wk.name + ' (' + r.dims[s.weakest].health + '). ' +
+          'The goal is not to move past any dimension and leave it behind, but to keep all six healthy together.';
+      }
+      if (r.wallLevel === 'strong') t += ' Your answers also show strong signs of a Wall. This is not a failure. It usually means a roadblock has gone unattended for a while, and it is worth talking with a coach, spiritual director, or pastor.';
+      else if (r.wallLevel === 'some') t += ' There are some early signs of a Wall. Attending to your roadblocks now can keep it from deepening.';
+      else t += ' You do not show strong Wall signs right now. Keep an eye on your roadblocks so they do not turn into one.';
+      return t;
+    }
+    function lc1(t) { return t.charAt(0).toLowerCase() + t.slice(1); }
+    function csFocusText(r) {
+      var s = csSummary(r), d = CHRIST[s.focus];
+      return 'Start with ' + d.name + '. Choose two of these practices to try: ' + lc1(d.practices[0]) + '; and ' + lc1(d.practices[1]) + '. For ministry, consider this: ' + d.ministry.charAt(0).toLowerCase() + d.ministry.slice(1);
+    }
+    function csCareLevel(r) {
+      var min = Math.min.apply(null, r.dims.map(function (d) { return d.health; }));
+      if (r.wallLevel === 'strong' || min < 25) return 'strong';
+      if (r.wallLevel === 'some' || min < 40) return 'suggested';
+      return 'optional';
+    }
+
+    /* ---- hexagon chart ---- */
+    function drawHex(canvas, px, r, bg) {
+      canvas.width = px; canvas.height = px;
+      var c = canvas.getContext('2d'), cx = px / 2, cy = px / 2 + px * 0.01, R = px * 0.25, n = 6;
+      if (bg) { c.fillStyle = bg; c.fillRect(0, 0, px, px); } else c.clearRect(0, 0, px, px);
+      function ang(i) { return (-90 + 60 * i) * Math.PI / 180; }
+      function pt(i, f) { return [cx + Math.cos(ang(i)) * R * f, cy + Math.sin(ang(i)) * R * f]; }
+      c.lineWidth = Math.max(1, px / 600); c.strokeStyle = '#d6d0c2'; c.setLineDash([px / 120, px / 120]);
+      [0.25, 0.5, 0.75, 1].forEach(function (f) { c.beginPath(); for (var i = 0; i < n; i++) { var p = pt(i, f); i ? c.lineTo(p[0], p[1]) : c.moveTo(p[0], p[1]); } c.closePath(); c.stroke(); });
+      c.setLineDash([]); for (var i = 0; i < n; i++) { var e = pt(i, 1); c.beginPath(); c.moveTo(cx, cy); c.lineTo(e[0], e[1]); c.stroke(); }
+      c.beginPath(); for (i = 0; i < n; i++) { var q = pt(i, Math.max(r.dims[i].health, 4) / 100); i ? c.lineTo(q[0], q[1]) : c.moveTo(q[0], q[1]); }
+      c.closePath(); c.fillStyle = 'rgba(54,82,51,.20)'; c.fill(); c.lineWidth = px / 220; c.strokeStyle = '#365233'; c.stroke();
+      for (i = 0; i < n; i++) { var d = pt(i, Math.max(r.dims[i].health, 4) / 100); c.beginPath(); c.arc(d[0], d[1], px / 100, 0, 7); c.fillStyle = CHRIST[i].color; c.fill(); }
+      // roadblock markers on the outer ring
+      for (i = 0; i < n; i++) {
+        var st = r.dims[i].rbStatus; if (st === 'clear') continue;
+        var m = pt(i, 1.0); c.beginPath(); c.arc(m[0], m[1], px * 0.02, 0, 7); c.fillStyle = CS_RB_COLOR[st]; c.fill();
+        c.fillStyle = '#fff'; c.font = '700 ' + Math.round(px * 0.028) + 'px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('!', m[0], m[1] + px * 0.002);
+      }
+      c.textBaseline = 'alphabetic';
+      var f1 = Math.round(px * 0.034), f2 = Math.round(px * 0.032);
+      for (i = 0; i < n; i++) {
+        var a = ang(i), cosA = Math.cos(a), sinA = Math.sin(a), lr = R + px * 0.075;
+        var lx = cx + cosA * lr, ly = cy + sinA * lr;
+        var align = cosA > 0.3 ? 'left' : cosA < -0.3 ? 'right' : 'center';
+        if (align === 'left') lx = cx + cosA * R + px * 0.045; else if (align === 'right') lx = cx + cosA * R - px * 0.045;
+        var y1 = sinA < -0.8 ? ly - px * 0.035 : sinA > 0.8 ? ly + px * 0.02 : ly - px * 0.005;
+        c.textAlign = align; c.font = '600 ' + f1 + 'px system-ui, sans-serif'; c.fillStyle = '#1f2b22'; c.fillText(CHRIST[i].code + ' \u00b7 ' + CHRIST[i].short, lx, y1);
+        c.font = '700 ' + f2 + 'px system-ui, sans-serif'; c.fillStyle = CHRIST[i].color; c.fillText(String(r.dims[i].health), lx, y1 + px * 0.04);
+      }
+    }
+
+    /* ---- views ---- */
+    var elChrist = $('#christ');
+    var csState = { page: 'intro', answers: new Array(33).fill(null), result: null };
+
+    function csRenderIntro() {
+      var last = cs.history[cs.history.length - 1];
+      var legend = CHRIST.map(function (d) {
+        return '<li><span class="cs-dot" style="background:' + d.color + '">' + d.code + '</span><span><strong>' + esc(d.name) + '</strong><br><span class="note">' + esc(d.desc) + '</span></span></li>';
+      }).join('');
+      elChrist.innerHTML =
+        '<p class="eyebrow">Soul check</p>' +
+        '<h1 class="greet">CHRIST Stages</h1>' +
+        '<p class="lead">Six dimensions of a healthy soul. You do not graduate from one and leave it behind. The goal is to be healthy in all six, and to notice early when a roadblock is hardening into a Wall.</p>' +
+        '<div class="card" style="margin-top:22px">' +
+          '<ul class="cs-legend">' + legend + '</ul>' +
+          '<p class="lead" style="font-size:15.5px;margin-top:14px">Thirty-three short statements, about eight quiet minutes. For each one, choose how true it has been for you lately. In each dimension you will also name a common roadblock, and at the end you will check for signs of a Wall.</p>' +
+          '<div class="field"><label for="csnm">Your name (optional, for your report)</label><input id="csnm" type="text" autocomplete="name" value="' + esc(store.name) + '" placeholder="Juan dela Cruz"></div>' +
+          '<div class="row" style="margin-top:20px"><button class="btn" id="csstart">Begin the CHRIST Stages check \u2192</button>' +
+          (last ? '<button class="btn ghost" id="csviewlast">View last results</button>' : '') + '</div>' +
+          (last ? '<p class="note" style="margin-top:14px">Last check \u00b7 ' + esc(fmtDate(last.ts)) + ' \u2014 healthy in ' + csSummary(last).healthy + ' of 6 \u00b7 <button class="link" id="csclear">Clear saved results</button></p>' : '') +
+          '<p class="note" style="margin-top:14px">Your answers stay on this device. You can download a PDF to keep, or to share with a supervisor or coach.</p>' +
+        '</div>';
+    }
+
+    function csRenderPage(p) {
+      var prog = ''; for (var i = 0; i < 7; i++) prog += '<i class="' + (i <= p ? 'on' : '') + '"></i>';
+      var html = '<div class="progress" aria-hidden="true">' + prog + '</div>';
+      function scale(idx, color) {
+        var name = 'c' + idx, opts = '';
+        for (var v = 1; v <= 5; v++) opts += '<input type="radio" name="' + name + '" id="' + name + '_' + v + '" value="' + v + '"' + (csState.answers[idx] === v ? ' checked' : '') + '><label for="' + name + '_' + v + '">' + SCALE[v - 1] + '</label>';
+        return '<div class="scale" style="--dc:' + color + '">' + opts + '</div>';
+      }
+      if (p < 6) {
+        var d = CHRIST[p];
+        html += '<p class="eyebrow" style="color:' + d.color + '">' + d.code + ' \u00b7 ' + (p + 1) + ' of 6</p>' +
+          '<h2 style="font-size:30px;margin:6px 0 6px">' + esc(d.name) + '</h2><p class="lead" style="margin-bottom:22px">' + esc(d.desc) + '</p>';
+        d.qs.forEach(function (q, k) { html += '<fieldset class="q"><legend>' + esc(q) + '</legend>' + scale(p * 5 + k, d.color) + '</fieldset>'; });
+        html += '<div class="cs-rb" style="border-color:' + d.color + '"><p class="eyebrow">Roadblock check \u00b7 ' + esc(d.roadblock.name) + '</p>' +
+          '<fieldset class="q" style="margin:8px 0 0"><legend>' + esc(d.roadblock.q) + '</legend>' + scale(p * 5 + 4, '#a4493d') + '</fieldset>' +
+          '<p class="note">For this one, a higher answer means the roadblock is more true of you.</p></div>';
+      } else {
+        html += '<p class="eyebrow" style="color:#5b5b5b">The Wall \u00b7 7 of 7</p><h2 style="font-size:30px;margin:6px 0 6px">Signs of a Wall</h2>' +
+          '<p class="lead" style="margin-bottom:22px">' + esc(WALL.intro) + ' A higher answer means the sign is more true of you.</p>';
+        WALL.qs.forEach(function (q, k) { html += '<fieldset class="q"><legend>' + esc(q) + '</legend>' + scale(30 + k, '#5b5b5b') + '</fieldset>'; });
+      }
+      html += '<div class="nav"><button class="btn ghost" id="csback">\u2190 Back</button><button class="btn" id="csnext" disabled>' + (p === 6 ? 'See my results' : 'Next \u2192') + '</button></div>';
+      elChrist.innerHTML = html; csUpdateNext(p);
+    }
+    function csPageIdx(p) { return p < 6 ? [p * 5, p * 5 + 1, p * 5 + 2, p * 5 + 3, p * 5 + 4] : [30, 31, 32]; }
+    function csUpdateNext(p) { var b = $('#csnext'); if (b) b.disabled = !csPageIdx(p).every(function (i) { return csState.answers[i]; }); }
+
+    function csRenderResults(r) {
+      var s = csSummary(r), wallColor = CS_WALL_COLOR[r.wallLevel];
+      var cards = CHRIST.map(function (d, i) {
+        var dm = r.dims[i], b = csBand(dm.health), needs = dm.health < 70 || dm.rb >= 3;
+        var pr = d.practices.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('');
+        return '<details class="cs-dim"' + (needs ? ' open' : '') + '><summary><span class="cs-dot" style="background:' + d.color + '">' + d.code + '</span>' +
+          '<span class="cs-sum"><strong>' + esc(d.name) + '</strong><span class="note">' + esc(b.label) + ' \u00b7 ' + esc(CS_RB_LABEL[dm.rbStatus]) + '</span></span>' +
+          '<span class="cs-score" style="color:' + d.color + '">' + dm.health + '</span></summary>' +
+          '<div class="bar-track"><div class="bar-fill" style="width:' + dm.health + '%;background:' + d.color + '"></div></div>' +
+          '<p class="cs-h">' + (needs ? 'How you may be feeling' : 'Celebrate') + '</p><p>' + esc(needs ? d.empathy : d.celebrate) + '</p>' +
+          (dm.rb >= 3 ? '<p class="cs-h">Your roadblock</p><p>' + esc(d.roadblock.name) + '. Name it honestly, and bring it to God and to someone you trust before it hardens.</p>' : '') +
+          '<p class="cs-h">' + (needs ? 'Soul care practices to try' : 'Practices to keep growing') + '</p><ul>' + pr + '</ul>' +
+          '<p class="cs-h">Church ministry focus</p><p>' + esc(d.ministry) + '</p></details>';
+      }).join('');
+      var wallDetail = r.wallLevel === 'none'
+        ? '<p>' + esc('You do not show strong signs of a Wall right now. Keep watching your roadblocks, especially any marked above, so that they do not harden into one.') + '</p>'
+        : '<p>' + esc(WALL.empathy) + '</p>' +
+          (s.roadblocks.length ? '<p class="cs-h">Where a roadblock may be feeding it</p><p>' + esc(s.roadblocks.map(function (i) { return CHRIST[i].name; }).join(', ')) + '</p>' : '') +
+          '<p class="cs-h">What can help</p><ul>' + WALL.practices.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ul>' +
+          '<p>The Care tab is one step away if you would like someone to walk with you.</p>';
+      var prompts = CS_PROMPTS.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('');
+      elChrist.innerHTML =
+        '<p class="eyebrow">CHRIST Stages \u00b7 ' + esc(fmtDate(r.ts)) + (store.name ? ' \u00b7 ' + esc(store.name) : '') + '</p>' +
+        '<div class="card" style="margin-top:10px"><div class="hero"><div>' +
+          '<h1 style="font-size:30px;margin-bottom:10px">Six dimensions, one soul</h1>' +
+          '<div class="score-big">' + s.healthy + '<small>/6 healthy</small></div>' +
+          '<p style="margin-top:10px"><span class="pill" style="background:' + wallColor + '">' + esc(CS_WALL_LABEL[r.wallLevel]) + '</span></p>' +
+          '<p class="note" style="margin-top:10px">The orange and red marks on the chart show roadblocks to watch. Higher is healthier in each dimension.</p>' +
+        '</div><canvas class="radar" id="hex" role="img" aria-label="Chart of your six CHRIST dimensions: ' +
+          CHRIST.map(function (d, i) { return d.name + ' ' + r.dims[i].health; }).join(', ') + '"></canvas></div></div>' +
+        '<div class="block card"><h2>Summary</h2><p class="lead" style="font-size:16px">' + esc(csOverall(r)) + '</p></div>' +
+        '<div class="block card"><h2>Your focus for the next thirty days</h2><p class="lead" style="font-size:16px">' + esc(csFocusText(r)) + '</p></div>' +
+        '<div class="block"><h2>Dimension by dimension</h2><div class="cs-dims">' + cards + '</div></div>' +
+        '<div class="block card cs-wall" style="border-left-color:' + wallColor + '"><h2>The Wall</h2><p class="eyebrow" style="color:' + wallColor + '">' + esc(CS_WALL_LABEL[r.wallLevel]) + '</p>' + wallDetail + '</div>' +
+        '<div class="block card"><h2>Questions to bring to a supervisor or coach</h2><ul>' + prompts + '</ul></div>' +
+        '<div class="row" style="margin-top:22px"><button class="btn" id="cspdf">Download PDF</button><button class="btn" id="cstocare" style="background:#7a64a8">Continue to Care \u2192</button><button class="btn ghost" id="csretake">Retake</button></div>' +
+        '<p class="note" style="margin-top:16px">A reflective self-check, not a diagnosis. Based on the CHRIST Stages framework taught by Soul Shepherding; for their own free assessment, see soulshepherding.org.</p>';
+      drawHex($('#hex'), 900, r, null); csState.result = r;
+    }
+    function csShow(page) {
+      csState.page = page;
+      if (page === 'intro') csRenderIntro(); else if (page === 'results') csRenderResults(csState.result); else csRenderPage(page);
+      $('#pane-christ').scrollTop = 0;
+    }
+    elChrist.addEventListener('click', function (e) {
+      var id = e.target.id; if (!id) return;
+      if (id === 'csstart') {
+        var nm = $('#csnm'); store.name = nm ? nm.value.trim() : store.name; save(KEY, store);
+        csState.answers = new Array(33).fill(null); csShow(0);
+      } else if (id === 'csviewlast') { csState.result = cs.history[cs.history.length - 1]; csShow('results'); }
+      else if (id === 'csclear') { if (confirm('Delete all saved CHRIST Stages results from this device?')) { cs.history = []; save(CSKEY, cs); careKey = null; renderStepper(); csShow('intro'); } }
+      else if (id === 'csback') csShow(csState.page === 0 ? 'intro' : csState.page - 1);
+      else if (id === 'csnext') {
+        if (csState.page < 6) csShow(csState.page + 1);
+        else { var r = csCompute(csState.answers); cs.history.push(r); cs.history = cs.history.slice(-30); save(CSKEY, cs); csState.result = r; careKey = null; renderStepper(); csShow('results'); }
+      }
+      else if (id === 'csretake') { csState.answers = new Array(33).fill(null); csShow('intro'); }
+      else if (id === 'cstocare') go('care');
+      else if (id === 'cspdf') csPdf(csState.result);
+    });
+    elChrist.addEventListener('change', function (e) {
+      if (e.target.type === 'radio') { csState.answers[+e.target.name.slice(1)] = +e.target.value; csUpdateNext(csState.page); }
+    });
+
+    function csPdf(r) {
+      if (!window.jspdf) { say('The PDF tool did not load. Please reload and try again.'); return; }
+      loadImg('rlcc-logo-white.png').catch(function () { return null; }).then(function (logo) {
+        var doc = new window.jspdf.jsPDF({ unit: 'mm', format: 'a4' }), W = 210, H = 297, M = 18, y = 0, s = csSummary(r);
+        function ensure(h) { if (y + h > H - 22) { doc.addPage(); y = 22; } }
+        function para(text, size, style, color, gap, indent) {
+          indent = indent || 0; doc.setFont('helvetica', style || 'normal'); doc.setFontSize(size); doc.setTextColor.apply(doc, color || [31, 43, 34]);
+          var lines = doc.splitTextToSize(pdfSafe(text), W - 2 * M - indent), lh = size * 0.42;
+          ensure(lines.length * lh + 2); doc.text(lines, M + indent, y); y += lines.length * lh + (gap == null ? 3 : gap);
+        }
+        function head(text, size) { ensure(14); doc.setFont('times', 'bold'); doc.setFontSize(size || 14); doc.setTextColor(31, 43, 34); doc.text(pdfSafe(text), M, y); y += (size || 14) * 0.5; }
+        function sub(text) { ensure(18); para(text, 10.5, 'bold', [54, 82, 51], 1.5); }
+
+        doc.setFillColor(54, 82, 51); doc.rect(0, 0, W, 30, 'F');
+        if (logo) { var lw = 64, lh2 = lw * logo.h / logo.w; doc.addImage(logo.data, 'PNG', M, (30 - lh2) / 2, lw, lh2); }
+        y = 46; doc.setFont('times', 'bold'); doc.setFontSize(21); doc.setTextColor(31, 43, 34); doc.text('CHRIST Stages Self-Assessment', M, y);
+        y += 7; doc.setFont('helvetica', 'normal'); doc.setFontSize(10.5); doc.setTextColor(102, 114, 106);
+        doc.text(pdfSafe((store.name ? store.name + '  |  ' : '') + fmtDate(r.ts, true) + ', ' + new Date(r.ts).getFullYear()), M, y);
+        var wc = hex(CS_WALL_COLOR[r.wallLevel]); doc.setFont('helvetica', 'bold'); doc.setFontSize(11); doc.setTextColor(wc[0], wc[1], wc[2]);
+        doc.text(pdfSafe(CS_WALL_LABEL[r.wallLevel]), W - M, y, { align: 'right' });
+        y += 5; doc.setFont('helvetica', 'normal'); doc.setFontSize(10); doc.setTextColor(102, 114, 106);
+        doc.text('Healthy in ' + s.healthy + ' of 6 dimensions. Higher is healthier. Marks (!) show roadblocks.', M, y);
+
+        var cv = document.createElement('canvas'); drawHex(cv, 1000, r, '#ffffff');
+        doc.addImage(cv.toDataURL('image/png'), 'PNG', (W - 100) / 2, y + 2, 100, 100); y += 106;
+
+        head('Where each dimension sits'); y += 4;
+        CHRIST.forEach(function (d, i) {
+          var dm = r.dims[i], col = hex(d.color), b = csBand(dm.health), rc = hex(CS_RB_COLOR[dm.rbStatus]); ensure(10);
+          doc.setFillColor(col[0], col[1], col[2]); doc.circle(M + 2, y - 1.3, 2.2, 'F');
+          doc.setFont('helvetica', 'bold'); doc.setFontSize(7); doc.setTextColor(255, 255, 255); doc.text(d.code, M + 2, y - 0.5, { align: 'center' });
+          doc.setFontSize(10); doc.setTextColor(31, 43, 34); doc.text(pdfSafe(d.name), M + 7, y);
+          doc.setFillColor(236, 231, 218); doc.roundedRect(78, y - 3, 44, 3, 1.5, 1.5, 'F');
+          doc.setFillColor(col[0], col[1], col[2]); doc.roundedRect(78, y - 3, Math.max(3, 44 * dm.health / 100), 3, 1.5, 1.5, 'F');
+          doc.setFont('helvetica', 'normal'); doc.text(dm.health + ' ' + pdfSafe(b.label), 125, y);
+          doc.setTextColor(rc[0], rc[1], rc[2]); doc.text(pdfSafe(CS_RB_LABEL[dm.rbStatus]), 158, y);
+          y += 9;
+        });
+        y += 3; head('Summary'); y += 3; para(csOverall(r), 10.5, 'normal', null, 5);
+        head('Your focus for the next thirty days'); y += 3; para(csFocusText(r), 10.5, 'normal', null, 6);
+
+        head('Dimension by dimension'); y += 4;
+        CHRIST.forEach(function (d, i) {
+          var dm = r.dims[i], needs = dm.health < 70 || dm.rb >= 3, b = csBand(dm.health); ensure(34);
+          doc.setFont('times', 'bold'); doc.setFontSize(12.5); var col = hex(d.color); doc.setTextColor(col[0], col[1], col[2]);
+          doc.text(pdfSafe(d.code + ' - ' + d.name + '  (' + dm.health + ', ' + b.label + ')'), M, y); y += 6;
+          doc.setFont('helvetica', 'normal'); doc.setFontSize(9.5); doc.setTextColor(102, 114, 106); doc.text(pdfSafe(CS_RB_LABEL[dm.rbStatus] + ': ' + d.roadblock.name), M, y); y += 5;
+          para(needs ? d.empathy : d.celebrate, 10, 'normal', null, 2);
+          sub(needs ? 'Soul care practices to try' : 'Practices to keep growing');
+          d.practices.forEach(function (t) { para('-  ' + t, 10, 'normal', null, 0.8, 2); });
+          y += 1.5; sub('Church ministry focus'); para(d.ministry, 10, 'normal', null, 7);
+        });
+
+        head('The Wall'); y += 3;
+        para(CS_WALL_LABEL[r.wallLevel] + '. ' + WALL.intro, 10.5, 'normal', null, 3);
+        if (r.wallLevel !== 'none') {
+          para(WALL.empathy, 10, 'normal', null, 2);
+          if (s.roadblocks.length) para('Roadblocks that may be feeding it: ' + s.roadblocks.map(function (i) { return CHRIST[i].name; }).join(', ') + '.', 10, 'normal', null, 2);
+          sub('What can help'); WALL.practices.forEach(function (t) { para('-  ' + t, 10, 'normal', null, 0.8, 2); });
+        }
+        y += 5; head('Questions to bring to a supervisor or coach'); y += 3;
+        CS_PROMPTS.forEach(function (t) { para('-  ' + t, 10.5, 'normal', null, 1.5, 2); });
+
+        var n = doc.getNumberOfPages();
+        for (var p = 1; p <= n; p++) {
+          doc.setPage(p); doc.setFont('helvetica', 'normal'); doc.setFontSize(8); doc.setTextColor(140, 148, 142);
+          doc.text('Real Life Christian Communities | 3M | CHRIST Stages framework: Soul Shepherding | A reflective self-check, not a diagnosis', M, H - 12);
+          doc.text(p + ' / ' + n, W - M, H - 12, { align: 'right' });
+        }
+        var d0 = new Date(r.ts), stamp = d0.getFullYear() + '-' + ('0' + (d0.getMonth() + 1)).slice(-2) + '-' + ('0' + d0.getDate()).slice(-2);
+        doc.save('CHRIST-Stages-' + stamp + '.pdf');
+      }).catch(function () { say('Sorry, the PDF could not be made. Please try again.'); });
+    }
+
     /* ---------- Care view ---------- */
     var elCare = $('#care'), careKey = null;
     function openUrl(u) { return u ? 'href="' + esc(u) + '" target="_blank" rel="noopener"' : ''; }
     function renderCare() {
-      var r = store.history[store.history.length - 1], rec = '';
-      var key = r ? r.ts : 'none'; if (key === careKey) return; careKey = key;
-      if (!r) {
-        rec = '<div class="card rec"><p class="eyebrow">Care</p><h2>Start with your check-in</h2><p class="lead" style="font-size:16px">Take the four-minute check-in first so we can suggest what fits you best. You are always welcome to reach Soul Clinic directly as well.</p>' +
-              '<div class="row" style="margin-top:16px"><button class="btn" data-go="checkin">Go to the check-in</button><button class="btn ghost" id="openclinic">Open Soul Clinic anyway</button></div></div>';
+      var r = store.history[store.history.length - 1], c = cs.history[cs.history.length - 1], rec = '';
+      var key = (r ? r.ts : 'n') + '|' + (c ? c.ts : 'n'); if (key === careKey) return; careKey = key;
+      if (!r && !c) {
+        rec = '<div class="card rec"><p class="eyebrow">Care</p><h2>Start with your check-ins</h2><p class="lead" style="font-size:16px">Take the Daily RPMS check-in and the CHRIST Stages check first, so we can suggest what fits you best. You are always welcome to reach Soul Clinic directly as well.</p>' +
+              '<div class="row" style="margin-top:16px"><button class="btn" data-go="checkin">Go to the check-in</button><button class="btn" data-go="christ" style="background:#7a64a8">Go to CHRIST Stages</button><button class="btn ghost" id="openclinic">Open Soul Clinic anyway</button></div></div>';
       } else {
-        var lvl = careLevel(r), low = lowDomains(r).join(' and ').toLowerCase(), t, body;
-        if (lvl === 'strong') { t = 'We would love to walk with you'; body = 'Your check-in suggests you may be carrying a lot right now, especially in your ' + low + '. You do not have to carry it alone. We encourage you to request spiritual direction or coaching through Soul Clinic. A ministry leader will review your request and follow up with you.'; }
-        else if (lvl === 'suggested') { t = 'A conversation could help'; body = 'Your check-in shows some areas, especially ' + low + ', where support could make a real difference. Soul Clinic can connect you with spiritual direction or coaching if you would like someone alongside you.'; }
-        else { t = 'You are doing well, and support is still here'; body = 'Your check-in looks healthy. Soul Clinic is here whenever you want spiritual direction or coaching, whether to go deeper or simply to have a companion for the journey.'; }
-        rec = '<div class="card rec ' + lvl + '"><p class="eyebrow">Your check-in \u00b7 ' + r.overall + '/100 \u00b7 ' + esc(bandOf(r.overall).label) + '</p><h2>' + t + '</h2><p class="lead" style="font-size:16px">' + esc(body) + '</p>' +
+        var rank = { optional: 0, suggested: 1, strong: 2 }, names = ['optional', 'suggested', 'strong'];
+        var lvl = names[Math.max(r ? rank[careLevel(r)] : 0, c ? rank[csCareLevel(c)] : 0)], t, body, seen = [];
+        if (r) seen.push('Daily RPMS: ' + r.overall + '/100 (' + bandOf(r.overall).label + '). Areas that could use care: ' + lowDomains(r).join(' and ').toLowerCase() + '.');
+        if (c) {
+          var cSum = csSummary(c);
+          seen.push('CHRIST Stages: healthy in ' + cSum.healthy + ' of 6 dimensions. ' + CS_WALL_LABEL[c.wallLevel] + '.' +
+            (cSum.roadblocks.length ? ' Roadblocks present in ' + cSum.roadblocks.map(function (i) { return CHRIST[i].name; }).join(', ') + '.' : ''));
+        }
+        if (lvl === 'strong') { t = 'We would love to walk with you'; body = 'What you shared suggests you may be carrying a lot right now. You do not have to carry it alone. We encourage you to request spiritual direction or coaching through Soul Clinic. A ministry leader will review your request and follow up with you.'; }
+        else if (lvl === 'suggested') { t = 'A conversation could help'; body = 'What you shared shows some areas where support could make a real difference. Soul Clinic can connect you with spiritual direction or coaching if you would like someone alongside you.'; }
+        else { t = 'You are doing well, and support is still here'; body = 'What you shared looks healthy. Soul Clinic is here whenever you want spiritual direction or coaching, whether to go deeper or simply to have a companion for the journey.'; }
+        rec = '<div class="card rec ' + lvl + '"><p class="eyebrow">Your check-ins</p><h2>' + t + '</h2><p class="lead" style="font-size:16px">' + esc(body) + '</p>' +
+              '<ul class="note" style="margin:12px 0 0;padding-left:20px;font-size:13.5px">' + seen.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' +
               '<div class="row" style="margin-top:16px"><button class="btn" id="openclinic">Ask for spiritual direction or coaching</button><a class="btn ghost" ' + openUrl(CONFIG.CLINIC_URL) + '>Open in a new tab \u2197</a></div></div>';
       }
       elCare.innerHTML = rec +
         '<div class="safety"><strong>Soul Clinic is not an emergency service.</strong> If you or someone else is in immediate danger, contact local emergency services or go to the nearest emergency department right away.</div>' +
         '<div id="clinicbox"></div>' +
-        '<div class="row" style="margin-top:22px"><button class="btn" data-go="learn">Continue to Learn \u2192</button><button class="btn ghost" data-go="checkin">\u2190 Back to check-in</button></div>';
+        '<div class="row" style="margin-top:22px"><button class="btn" data-go="course">Continue to Course \u2192</button><button class="btn ghost" data-go="christ">\u2190 Back to CHRIST Stages</button></div>';
     }
     elCare.addEventListener('click', function (e) {
       var t = e.target.closest('button'); if (!t) return;
@@ -512,7 +912,7 @@
       } else if (t.dataset.go) go(t.dataset.go);
     });
 
-    /* ---------- Framed tools (Learn, Plan) ---------- */
+    /* ---------- Framed tools (Course, Commission) ---------- */
     var frames = {};
     function buildFramePane(id, url, nextStep, nextLabel, emptyMsg) {
       var pane = $('#pane-' + id);
@@ -540,22 +940,24 @@
     }
 
     /* ---------- Navigation ---------- */
-    var ORDER = ['checkin', 'care', 'learn', 'plan'];
+    var ORDER = ['checkin', 'christ', 'care', 'course', 'commission'];
+    var ALIAS = { learn: 'course', plan: 'commission' };
     function renderStepper() {
       document.querySelectorAll('.step').forEach(function (b) {
-        var s = b.dataset.step, done = s === 'checkin' ? store.history.length > 0 : !!journey.visited[s];
+        var s = b.dataset.step, done = s === 'checkin' ? store.history.length > 0 : s === 'christ' ? cs.history.length > 0 : !!journey.visited[s];
         b.classList.toggle('done', done);
         $('.n', b).textContent = done ? '\u2713' : String(ORDER.indexOf(s) + 1);
       });
     }
     function go(step) {
+      step = ALIAS[step] || step;
       if (ORDER.indexOf(step) < 0) step = 'checkin';
       document.querySelectorAll('.pane').forEach(function (p) { p.classList.toggle('active', p.id === 'pane-' + step); });
       document.querySelectorAll('.step').forEach(function (b) { if (b.dataset.step === step) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current'); });
       if (step === 'care') renderCare();
-      if (step === 'learn' && !frames.learn) buildFramePane('learn', CONFIG.LEARN_URL, 'plan', 'Next: Plan your week \u2192', 'Learn');
-      if (step === 'plan' && !frames.plan) buildFramePane('plan', CONFIG.WISE_URL, null, '', 'Wise Planning');
-      if (step !== 'checkin') { journey.visited[step] = true; save(JKEY, journey); }
+      if (step === 'course' && !frames.course) buildFramePane('course', CONFIG.LEARN_URL, 'commission', 'Next: Commission \u2192', 'Course');
+      if (step === 'commission' && !frames.commission) buildFramePane('commission', CONFIG.WISE_URL, null, '', 'Commission');
+      if (step !== 'checkin' && step !== 'christ') { journey.visited[step] = true; save(JKEY, journey); }
       renderStepper();
       if (location.hash !== '#' + step) history.replaceState(null, '', '#' + step);
       var p = $('#pane-' + step); if (p) p.scrollTop = 0;
@@ -564,7 +966,7 @@
     window.addEventListener('hashchange', function () { go(location.hash.slice(1)); });
 
     /* ---------- Start ---------- */
-    renderIntro(); renderStepper();
+    renderIntro(); csRenderIntro(); renderStepper();
     go(location.hash.slice(1) || 'checkin');
     if ('serviceWorker' in navigator) window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });
   })();
