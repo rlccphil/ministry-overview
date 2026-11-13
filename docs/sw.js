@@ -1,6 +1,6 @@
-// Service worker for "3M". Caches the app shell for fast, offline-friendly opening.
+// Service worker for "4M". Caches the app shell for fast, offline-friendly opening.
 // Bump CACHE_VERSION whenever you change any shell file.
-const CACHE_VERSION = '3m-v7';
+const CACHE_VERSION = '4m-v8';
 const SHELL = ['./', './index.html', './manifest.webmanifest', './jspdf.umd.min.js', './icon-192.png', './icon-512.png', './rlcc-logo-white.png'];
 
 self.addEventListener('install', (e) => {
