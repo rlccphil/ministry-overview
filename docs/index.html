@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>5M | Membership, Mobilization, Mission, Multiplication, Movement</title>
-  <meta name="description" content="A guided journey for RLCC: join a circle, check in, assess your CHRIST Stages, find care, take the course, discover your calling, and plan your week for the commission.">
+  <meta name="description" content="A guided journey for RLCC: join a circle, check in, assess your CHRIST Stages, find care, take the courses, discover your calling, and plan your week for the commission.">
   <meta name="theme-color" content="#365233">
 
   <link rel="manifest" href="manifest.webmanifest">
@@ -16,7 +16,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
   <meta property="og:title" content="5M: Membership, Mobilization, Mission, Multiplication, Movement">
-  <meta property="og:description" content="A guided journey for RLCC: circles, check-in, CHRIST Stages, care, course, calling, and commission.">
+  <meta property="og:description" content="A guided journey for RLCC: circles, check-in, CHRIST Stages, care, courses, calling, and commission.">
   <meta property="og:image" content="icon-512.png">
 
   <style>
@@ -132,10 +132,10 @@
     .tbtn.go { background: var(--green); color: #fff; border-color: var(--green); }
     .tbtn.extra { border-color: #7a64a8; color: #5a468a; }
     .tbtn.extra:hover { background: #f4f0fa; }
-    .seg { display: inline-flex; border: 1px solid #cfd8cb; border-radius: 10px; overflow: hidden; }
-    .seg button { border: 0; background: #fff; padding: 7px 14px; font: 600 13px var(--sans); color: var(--green); cursor: pointer; }
-    .seg button + button { border-left: 1px solid #cfd8cb; }
-    .seg button[aria-pressed="true"] { background: var(--green); color: #fff; }
+    .seg { display: flex; flex-wrap: wrap; gap: 6px; }
+    .seg button { border: 1px solid #cfd8cb; border-radius: 999px; background: #fff; padding: 6px 13px; font: 600 13px var(--sans); color: var(--green); cursor: pointer; }
+    .seg button:hover { background: #eef3ec; }
+    .seg button[aria-pressed="true"] { background: var(--green); color: #fff; border-color: var(--green); }
     .fview { position: absolute; inset: 0; }
     .fwrap { position: relative; flex: 1 1 auto; min-height: 0; }
     .fwrap iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: #fff; }
@@ -216,7 +216,7 @@
     <button class="step" data-step="checkin"><span class="n">3</span>Check-in</button>
     <button class="step" data-step="christ"><span class="n">4</span>CHRIST Stages</button>
     <button class="step" data-step="care"><span class="n">5</span>Care</button>
-    <button class="step" data-step="course"><span class="n">6</span>Course</button>
+    <button class="step" data-step="course"><span class="n">6</span>Courses</button>
     <button class="step" data-step="calling"><span class="n">7</span>Calling</button>
     <button class="step" data-step="commission"><span class="n">8</span>Commission</button>
   </nav>
@@ -227,7 +227,7 @@
     <section class="pane" id="pane-checkin" aria-label="Check-in"><div class="wrap" id="checkin"></div></section>
     <section class="pane" id="pane-christ" aria-label="CHRIST Stages"><div class="wrap" id="christ"></div></section>
     <section class="pane" id="pane-care" aria-label="Care"><div class="wrap" id="care"></div></section>
-    <section class="pane fr" id="pane-course" aria-label="Course"></section>
+    <section class="pane fr" id="pane-course" aria-label="Courses"></section>
     <section class="pane fr" id="pane-calling" aria-label="Calling"></section>
     <section class="pane fr" id="pane-commission" aria-label="Commission"></section>
   </main>
@@ -246,6 +246,9 @@
       CIRCLES_URL: 'https://rlccphil.github.io/circles/',
       JOURNAL_URL: 'https://voice-first-ai-journ-pukp.bolt.host/',
       PRACTICES_URL: 'https://rlccphil.github.io/nine-practices/',
+      CIRCLE_TRAIN_URL: 'https://circle-group-leader-40cg.bolt.host/',
+      TEAM_TRAIN_URL: 'https://ministry-team-leader-l82p.bolt.host/',
+      SHEPHERD_URL: 'https://shepherding-ministry-bkvk.bolt.host/',
       CALLING_URL: 'https://rlccphil.github.io/ministry-deployment/',
       WISE_URL:   'https://rlccphil.github.io/wise-planning/',
       CARELOG_URL: 'https://rlccphil.github.io/personal-care-log/'
@@ -957,7 +960,7 @@
       elCare.innerHTML = rec +
         '<div class="safety"><strong>Soul Clinic is not an emergency service.</strong> If you or someone else is in immediate danger, contact local emergency services or go to the nearest emergency department right away.</div>' +
         '<div id="clinicbox"></div>' +
-        '<div class="row" style="margin-top:22px"><button class="btn" data-go="course">Continue to Course \u2192</button><button class="btn ghost" data-go="christ">\u2190 Back to CHRIST Stages</button></div>';
+        '<div class="row" style="margin-top:22px"><button class="btn" data-go="course">Continue to Courses \u2192</button><button class="btn ghost" data-go="christ">\u2190 Back to CHRIST Stages</button></div>';
     }
     elCare.addEventListener('click', function (e) {
       var t = e.target.closest('button'); if (!t) return;
@@ -1013,11 +1016,11 @@
       ['checkin', 'Check-in', 'A four-minute Daily RPMS check on your relational, physical, mental-emotional, and spiritual health.'],
       ['christ', 'CHRIST Stages', 'Assess six dimensions of a healthy soul, and download a summary to keep or to share with a supervisor.'],
       ['care', 'Care', 'Ask for spiritual direction or coaching through Soul Clinic whenever you would like someone alongside you.'],
-      ['course', 'Course', 'Walk the REACH, CORE, and LEAD pathway and keep turning each step again like a flywheel, and learn the Nine Practices of a Disciple.'],
+      ['course', 'Courses', 'Start with the Nine Practices of a Disciple, walk the REACH, CORE, and LEAD pathway and keep turning each step like a flywheel, then train as a circle group leader or a ministry team leader and grow in the heart and art of shepherding.'],
       ['calling', 'Calling', 'Discover your ministry calling.'],
       ['commission', 'Commission', 'Plan your week with Wise Planning, and use your Personal Care Log, so that what you learn becomes what you live.']
     ];
-    var STEP_LABEL = { welcome: 'Welcome', circles: 'Circles', checkin: 'Check-in', christ: 'CHRIST Stages', care: 'Care', course: 'Course', calling: 'Calling', commission: 'Commission' };
+    var STEP_LABEL = { welcome: 'Welcome', circles: 'Circles', checkin: 'Check-in', christ: 'CHRIST Stages', care: 'Care', course: 'Courses', calling: 'Calling', commission: 'Commission' };
     var elWelcome = $('#welcome');
     function renderWelcome() {
       var ms = MS.map(function (m, i) {
@@ -1043,7 +1046,7 @@
         '<div class="card" style="margin-top:16px"><h2 style="font-size:24px;margin-bottom:6px">A few things to know</h2><ul class="w-tips">' +
           '<li>Go in order the first time, or jump to any step. You can come back to any of them at any time.</li>' +
           '<li>Your Check-in and CHRIST Stages answers stay on your own device. You can download them as PDFs to keep, or to share with a supervisor or coach.</li>' +
-          '<li>Circles, Course, Calling, Care, and Commission open right inside 5M. What you enter in them is saved by those tools.</li>' +
+          '<li>Circles, Courses, Calling, Care, and Commission open right inside 5M. What you enter in them is saved by those tools.</li>' +
           '<li>On a phone, tap the menu button at the top right to move between steps. To keep 5M like an app, use your browser\u2019s Add to Home Screen.</li>' +
         '</ul></div>' +
         '<div class="verse">\u201cGo ye therefore, and teach all nations \u2026 and, lo, I am with you alway, even unto the end of the world.\u201d<span>Matthew 28:19\u201320 (KJV)</span></div>';
@@ -1090,7 +1093,7 @@
 
     /* ---------- Navigation ---------- */
     var ORDER = ['welcome', 'circles', 'checkin', 'christ', 'care', 'course', 'calling', 'commission'];
-    var ALIAS = { learn: 'course', plan: 'commission' };
+    var ALIAS = { learn: 'course', courses: 'course', plan: 'commission' };
     function renderStepper() {
       document.querySelectorAll('.step').forEach(function (b) {
         var s = b.dataset.step, done = s === 'checkin' ? store.history.length > 0 : s === 'christ' ? cs.history.length > 0 : !!journey.visited[s];
@@ -1124,9 +1127,12 @@
       if (step === 'care') renderCare();
       if (step === 'course' && !frames.course) {
         var cu = [];
-        if (CONFIG.LEARN_URL) cu.push({ key: 'pathway', label: 'Pathway', url: CONFIG.LEARN_URL });
         if (CONFIG.PRACTICES_URL) cu.push({ key: 'practices', label: 'Nine Practices', url: CONFIG.PRACTICES_URL });
-        if (cu.length) buildMultiPane('course', cu, { step: 'calling', label: 'Next: Calling \u2192' }); else buildFramePane('course', '', 'calling', 'Next: Calling \u2192', 'Course');
+        if (CONFIG.LEARN_URL) cu.push({ key: 'pathway', label: 'Pathway', url: CONFIG.LEARN_URL });
+        if (CONFIG.CIRCLE_TRAIN_URL) cu.push({ key: 'circletrain', label: 'Circle Group Leaders Training', url: CONFIG.CIRCLE_TRAIN_URL });
+        if (CONFIG.TEAM_TRAIN_URL) cu.push({ key: 'teamtrain', label: 'Ministry Team Leaders Training', url: CONFIG.TEAM_TRAIN_URL });
+        if (CONFIG.SHEPHERD_URL) cu.push({ key: 'shepherd', label: 'The Heart and Art of Shepherding', url: CONFIG.SHEPHERD_URL });
+        if (cu.length) buildMultiPane('course', cu, { step: 'calling', label: 'Next: Calling \u2192' }); else buildFramePane('course', '', 'calling', 'Next: Calling \u2192', 'Courses');
       }
       if (step === 'calling' && !frames.calling) buildFramePane('calling', CONFIG.CALLING_URL, 'commission', 'Next: Commission \u2192', 'Calling');
       if (step === 'commission' && !frames.commission) {
