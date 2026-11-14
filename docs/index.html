@@ -130,6 +130,8 @@
     .tbtn { font-size: 13px; font-weight: 600; padding: 6px 12px; border-radius: 8px; border: 1px solid #cfd8cb; background: #fff; color: var(--green); text-decoration: none; }
     .tbtn:hover { background: #eef3ec; }
     .tbtn.go { background: var(--green); color: #fff; border-color: var(--green); }
+    .tbtn.extra { border-color: #7a64a8; color: #5a468a; }
+    .tbtn.extra:hover { background: #f4f0fa; }
     .seg { display: inline-flex; border: 1px solid #cfd8cb; border-radius: 10px; overflow: hidden; }
     .seg button { border: 0; background: #fff; padding: 7px 14px; font: 600 13px var(--sans); color: var(--green); cursor: pointer; }
     .seg button + button { border-left: 1px solid #cfd8cb; }
@@ -242,6 +244,7 @@
       CLINIC_URL: 'https://rlccphil.github.io/soul-clinic/',
       VISION_URL:  'https://share.minicoursegenerator.com/category/VisionSeminar-1/b925a114-f607-4d20-b8a3-099446397595',
       CIRCLES_URL: 'https://rlccphil.github.io/circles/',
+      JOURNAL_URL: 'https://voice-first-ai-journ-pukp.bolt.host/',
       CALLING_URL: 'https://rlccphil.github.io/ministry-deployment/',
       WISE_URL:   'https://rlccphil.github.io/wise-planning/',
       CARELOG_URL: 'https://rlccphil.github.io/personal-care-log/'
@@ -970,14 +973,15 @@
 
     /* ---------- Framed tools (Course, Commission) ---------- */
     var frames = {};
-    function buildFramePane(id, url, nextStep, nextLabel, emptyMsg) {
+    function buildFramePane(id, url, nextStep, nextLabel, emptyMsg, extras) {
       var pane = $('#pane-' + id);
       if (!url) {
         pane.innerHTML = '<div class="wrap"><div class="card"><p class="eyebrow">Coming soon</p><h2 style="margin:6px 0 8px">' + esc(emptyMsg) + '</h2><p class="lead" style="font-size:16px">This step will be available here shortly.</p></div></div>';
         pane.classList.remove('fr'); frames[id] = true; return;
       }
       pane.innerHTML =
-        '<div class="tool"><a class="tbtn" ' + openUrl(url) + '>Open in a new tab \u2197</a><button class="tbtn" data-act="reload">Reload</button><span class="sp"></span>' +
+        '<div class="tool"><a class="tbtn" ' + openUrl(url) + '>Open in a new tab \u2197</a><button class="tbtn" data-act="reload">Reload</button>' +
+        (extras || []).map(function (x) { return '<a class="tbtn extra" ' + openUrl(x.url) + '>' + esc(x.label) + ' \u2197</a>'; }).join('') + '<span class="sp"></span>' +
         (nextStep ? '<button class="tbtn go" data-go="' + nextStep + '">' + esc(nextLabel) + '</button>' : '') + '</div>' +
         '<div class="fwrap"><div class="fstatus"><div class="spinner"></div><div data-t>Loading\u2026</div></div><iframe title="' + esc(id) + '"></iframe></div>';
       var fr = $('iframe', pane), st = $('.fstatus', pane), tx = $('[data-t]', pane), slow;
@@ -1113,7 +1117,7 @@
       document.querySelectorAll('.pane').forEach(function (p) { p.classList.toggle('active', p.id === 'pane-' + step); });
       document.querySelectorAll('.step').forEach(function (b) { if (b.dataset.step === step) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current'); });
       if (step === 'welcome') renderWelcome();
-      if (step === 'circles' && !frames.circles) buildFramePane('circles', CONFIG.CIRCLES_URL, 'checkin', 'Next: Check-in \u2192', 'Circles');
+      if (step === 'circles' && !frames.circles) buildFramePane('circles', CONFIG.CIRCLES_URL, 'checkin', 'Next: Check-in \u2192', 'Circles', CONFIG.JOURNAL_URL ? [{ label: 'Mindful Journal', url: CONFIG.JOURNAL_URL }] : []);
       if (step === 'care') renderCare();
       if (step === 'course' && !frames.course) buildFramePane('course', CONFIG.LEARN_URL, 'calling', 'Next: Calling \u2192', 'Course');
       if (step === 'calling' && !frames.calling) buildFramePane('calling', CONFIG.CALLING_URL, 'commission', 'Next: Commission \u2192', 'Calling');
