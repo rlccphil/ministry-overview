@@ -245,6 +245,7 @@
       VISION_URL:  'https://share.minicoursegenerator.com/category/VisionSeminar-1/b925a114-f607-4d20-b8a3-099446397595',
       CIRCLES_URL: 'https://rlccphil.github.io/circles/',
       JOURNAL_URL: 'https://voice-first-ai-journ-pukp.bolt.host/',
+      PRACTICES_URL: 'https://rlccphil.github.io/nine-practices/',
       CALLING_URL: 'https://rlccphil.github.io/ministry-deployment/',
       WISE_URL:   'https://rlccphil.github.io/wise-planning/',
       CARELOG_URL: 'https://rlccphil.github.io/personal-care-log/'
@@ -1012,7 +1013,7 @@
       ['checkin', 'Check-in', 'A four-minute Daily RPMS check on your relational, physical, mental-emotional, and spiritual health.'],
       ['christ', 'CHRIST Stages', 'Assess six dimensions of a healthy soul, and download a summary to keep or to share with a supervisor.'],
       ['care', 'Care', 'Ask for spiritual direction or coaching through Soul Clinic whenever you would like someone alongside you.'],
-      ['course', 'Course', 'Walk the REACH, CORE, and LEAD pathway, and keep turning each step again like a flywheel.'],
+      ['course', 'Course', 'Walk the REACH, CORE, and LEAD pathway and keep turning each step again like a flywheel, and learn the Nine Practices of a Disciple.'],
       ['calling', 'Calling', 'Discover your ministry calling.'],
       ['commission', 'Commission', 'Plan your week with Wise Planning, and use your Personal Care Log, so that what you learn becomes what you live.']
     ];
@@ -1050,12 +1051,13 @@
     elWelcome.addEventListener('click', function (e) { var g = e.target.closest('[data-go]'); if (g) go(g.dataset.go); });
 
     /* A pane that holds more than one tool (Commission: Wise Planning + Personal Care Log) */
-    function buildMultiPane(id, tools) {
+    function buildMultiPane(id, tools, next) {
       var pane = $('#pane-' + id), list = [];
       pane.innerHTML =
         '<div class="tool"><div class="seg" role="group" aria-label="Tools">' +
           tools.map(function (t) { return '<button type="button" data-tool="' + esc(t.key) + '" aria-pressed="false">' + esc(t.label) + '</button>'; }).join('') +
-        '</div><span class="sp"></span><a class="tbtn" data-open target="_blank" rel="noopener">Open in a new tab \u2197</a><button class="tbtn" data-act="reload">Reload</button></div>' +
+        '</div><a class="tbtn" data-open target="_blank" rel="noopener">Open in a new tab \u2197</a><button class="tbtn" data-act="reload">Reload</button><span class="sp"></span>' +
+        (next ? '<button class="tbtn go" data-go="' + esc(next.step) + '">' + esc(next.label) + '</button>' : '') + '</div>' +
         '<div class="fwrap">' + tools.map(function (t) {
           return '<div class="fview" data-tool="' + esc(t.key) + '" hidden><div class="fstatus"><div class="spinner"></div><div data-t>Loading\u2026</div></div><iframe title="' + esc(t.label) + '"></iframe></div>';
         }).join('') + '</div>';
@@ -1080,6 +1082,7 @@
       }
       pane.addEventListener('click', function (e) {
         var b = e.target.closest('.seg button'); if (b) { activate(b.dataset.tool); return; }
+        var g = e.target.closest('[data-go]'); if (g) { go(g.dataset.go); return; }
         if (e.target.closest('[data-act="reload"]') && active) { active.fr.removeAttribute('src'); active.start(); }
       });
       frames[id] = true; activate(list[0].key);
@@ -1119,7 +1122,12 @@
       if (step === 'welcome') renderWelcome();
       if (step === 'circles' && !frames.circles) buildFramePane('circles', CONFIG.CIRCLES_URL, 'checkin', 'Next: Check-in \u2192', 'Circles', CONFIG.JOURNAL_URL ? [{ label: 'Mindful Journal', url: CONFIG.JOURNAL_URL }] : []);
       if (step === 'care') renderCare();
-      if (step === 'course' && !frames.course) buildFramePane('course', CONFIG.LEARN_URL, 'calling', 'Next: Calling \u2192', 'Course');
+      if (step === 'course' && !frames.course) {
+        var cu = [];
+        if (CONFIG.LEARN_URL) cu.push({ key: 'pathway', label: 'Pathway', url: CONFIG.LEARN_URL });
+        if (CONFIG.PRACTICES_URL) cu.push({ key: 'practices', label: 'Nine Practices', url: CONFIG.PRACTICES_URL });
+        if (cu.length) buildMultiPane('course', cu, { step: 'calling', label: 'Next: Calling \u2192' }); else buildFramePane('course', '', 'calling', 'Next: Calling \u2192', 'Course');
+      }
       if (step === 'calling' && !frames.calling) buildFramePane('calling', CONFIG.CALLING_URL, 'commission', 'Next: Commission \u2192', 'Calling');
       if (step === 'commission' && !frames.commission) {
         var ct = [];
