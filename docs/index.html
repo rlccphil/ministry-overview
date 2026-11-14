@@ -130,6 +130,11 @@
     .tbtn { font-size: 13px; font-weight: 600; padding: 6px 12px; border-radius: 8px; border: 1px solid #cfd8cb; background: #fff; color: var(--green); text-decoration: none; }
     .tbtn:hover { background: #eef3ec; }
     .tbtn.go { background: var(--green); color: #fff; border-color: var(--green); }
+    .seg { display: inline-flex; border: 1px solid #cfd8cb; border-radius: 10px; overflow: hidden; }
+    .seg button { border: 0; background: #fff; padding: 7px 14px; font: 600 13px var(--sans); color: var(--green); cursor: pointer; }
+    .seg button + button { border-left: 1px solid #cfd8cb; }
+    .seg button[aria-pressed="true"] { background: var(--green); color: #fff; }
+    .fview { position: absolute; inset: 0; }
     .fwrap { position: relative; flex: 1 1 auto; min-height: 0; }
     .fwrap iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: #fff; }
     .fstatus { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; background: var(--bg); text-align: center; padding: 24px; z-index: 2; }
@@ -238,7 +243,8 @@
       VISION_URL:  'https://share.minicoursegenerator.com/category/VisionSeminar-1/b925a114-f607-4d20-b8a3-099446397595',
       CIRCLES_URL: 'https://rlccphil.github.io/circles/',
       CALLING_URL: 'https://rlccphil.github.io/ministry-deployment/',
-      WISE_URL:   'https://rlccphil.github.io/wise-planning/'
+      WISE_URL:   'https://rlccphil.github.io/wise-planning/',
+      CARELOG_URL: 'https://rlccphil.github.io/personal-care-log/'
     };
 
     /* ---------- Check-in content (edit the words here) ---------- */
@@ -1004,7 +1010,7 @@
       ['care', 'Care', 'Ask for spiritual direction or coaching through Soul Clinic whenever you would like someone alongside you.'],
       ['course', 'Course', 'Walk the REACH, CORE, and LEAD pathway, and keep turning each step again like a flywheel.'],
       ['calling', 'Calling', 'Discover your ministry calling.'],
-      ['commission', 'Commission', 'Plan your week with Wise Planning, so that what you learn becomes what you live.']
+      ['commission', 'Commission', 'Plan your week with Wise Planning, and use your Personal Care Log, so that what you learn becomes what you live.']
     ];
     var STEP_LABEL = { welcome: 'Welcome', circles: 'Circles', checkin: 'Check-in', christ: 'CHRIST Stages', care: 'Care', course: 'Course', calling: 'Calling', commission: 'Commission' };
     var elWelcome = $('#welcome');
@@ -1038,6 +1044,42 @@
         '<div class="verse">\u201cGo ye therefore, and teach all nations \u2026 and, lo, I am with you alway, even unto the end of the world.\u201d<span>Matthew 28:19\u201320 (KJV)</span></div>';
     }
     elWelcome.addEventListener('click', function (e) { var g = e.target.closest('[data-go]'); if (g) go(g.dataset.go); });
+
+    /* A pane that holds more than one tool (Commission: Wise Planning + Personal Care Log) */
+    function buildMultiPane(id, tools) {
+      var pane = $('#pane-' + id), list = [];
+      pane.innerHTML =
+        '<div class="tool"><div class="seg" role="group" aria-label="Tools">' +
+          tools.map(function (t) { return '<button type="button" data-tool="' + esc(t.key) + '" aria-pressed="false">' + esc(t.label) + '</button>'; }).join('') +
+        '</div><span class="sp"></span><a class="tbtn" data-open target="_blank" rel="noopener">Open in a new tab \u2197</a><button class="tbtn" data-act="reload">Reload</button></div>' +
+        '<div class="fwrap">' + tools.map(function (t) {
+          return '<div class="fview" data-tool="' + esc(t.key) + '" hidden><div class="fstatus"><div class="spinner"></div><div data-t>Loading\u2026</div></div><iframe title="' + esc(t.label) + '"></iframe></div>';
+        }).join('') + '</div>';
+      tools.forEach(function (t) {
+        var v = $('.fview[data-tool="' + t.key + '"]', pane), o = { key: t.key, url: t.url, view: v, fr: $('iframe', v), st: $('.fstatus', v), tx: $('[data-t]', v), started: false, slow: null };
+        o.start = function () {
+          if (!navigator.onLine) { o.tx.textContent = 'You are offline. Connect to the internet to open this tool.'; o.st.querySelector('.spinner').style.display = 'none'; o.st.hidden = false; return; }
+          o.st.querySelector('.spinner').style.display = ''; o.tx.textContent = 'Loading\u2026'; o.st.hidden = false; clearTimeout(o.slow);
+          o.slow = setTimeout(function () { o.tx.textContent = 'Still loading\u2026 this can take a few seconds.'; }, 8000);
+          o.started = true; o.fr.src = o.url;
+        };
+        o.fr.addEventListener('load', function () { if (o.fr.getAttribute('src')) { clearTimeout(o.slow); o.st.hidden = true; } });
+        list.push(o);
+      });
+      var active = null;
+      function activate(key) {
+        list.forEach(function (o) {
+          var on = o.key === key; o.view.hidden = !on;
+          $('.seg button[data-tool="' + o.key + '"]', pane).setAttribute('aria-pressed', on ? 'true' : 'false');
+          if (on) { active = o; $('[data-open]', pane).href = o.url; if (!o.started) o.start(); }
+        });
+      }
+      pane.addEventListener('click', function (e) {
+        var b = e.target.closest('.seg button'); if (b) { activate(b.dataset.tool); return; }
+        if (e.target.closest('[data-act="reload"]') && active) { active.fr.removeAttribute('src'); active.start(); }
+      });
+      frames[id] = true; activate(list[0].key);
+    }
 
     /* ---------- Navigation ---------- */
     var ORDER = ['welcome', 'circles', 'checkin', 'christ', 'care', 'course', 'calling', 'commission'];
@@ -1075,7 +1117,12 @@
       if (step === 'care') renderCare();
       if (step === 'course' && !frames.course) buildFramePane('course', CONFIG.LEARN_URL, 'calling', 'Next: Calling \u2192', 'Course');
       if (step === 'calling' && !frames.calling) buildFramePane('calling', CONFIG.CALLING_URL, 'commission', 'Next: Commission \u2192', 'Calling');
-      if (step === 'commission' && !frames.commission) buildFramePane('commission', CONFIG.WISE_URL, null, '', 'Commission');
+      if (step === 'commission' && !frames.commission) {
+        var ct = [];
+        if (CONFIG.WISE_URL) ct.push({ key: 'wise', label: 'Wise Planning', url: CONFIG.WISE_URL });
+        if (CONFIG.CARELOG_URL) ct.push({ key: 'carelog', label: 'Personal Care Log', url: CONFIG.CARELOG_URL });
+        if (ct.length) buildMultiPane('commission', ct); else buildFramePane('commission', '', null, '', 'Commission');
+      }
       if (!auto) {
         if (step !== 'checkin' && step !== 'christ') journey.visited[step] = true;
         if (step !== 'welcome') journey.last = step;
