@@ -173,6 +173,10 @@
     .w-how strong { display: block; }
     .w-how .note { display: block; margin-top: 2px; }
     .w-tips { margin: 6px 0 0; padding-left: 20px; } .w-tips li { margin: 8px 0; }
+    .w-install { border-left: 6px solid var(--green); }
+    .w-install h2 { font-size: 22px; margin: 4px 0 8px; }
+    .w-help { margin-top: 12px; padding: 12px 14px; background: #f1f5ef; border-radius: 12px; font-size: 14.5px; color: #3c4a3f; }
+    .w-help ol { margin: 6px 0 0; padding-left: 20px; } .w-help li { margin: 4px 0; }
     .w-join { border-left: 6px solid #7a64a8; background: #fbf9fe; }
     .w-join h2 { font-size: 24px; margin: 4px 0 8px; }
     .w-join p { margin-bottom: 10px; }
@@ -251,7 +255,8 @@
       SHEPHERD_URL: 'https://shepherding-ministry-bkvk.bolt.host/',
       CALLING_URL: 'https://rlccphil.github.io/ministry-deployment/',
       WISE_URL:   'https://rlccphil.github.io/wise-planning/',
-      CARELOG_URL: 'https://rlccphil.github.io/personal-care-log/'
+      CARELOG_URL: 'https://rlccphil.github.io/personal-care-log/',
+      REPORTS_URL: 'https://rlccphil.churchcenter.com/pages/intern-reports'
     };
 
     /* ---------- Check-in content (edit the words here) ---------- */
@@ -1018,9 +1023,35 @@
       ['care', 'Care', 'Ask for spiritual direction or coaching through Soul Clinic whenever you would like someone alongside you.'],
       ['course', 'Courses', 'Start with the Nine Practices of a Disciple, walk the REACH, CORE, and LEAD pathway and keep turning each step like a flywheel, then train as a circle group leader or a ministry team leader and grow in the heart and art of shepherding.'],
       ['calling', 'Calling', 'Discover your ministry calling.'],
-      ['commission', 'Commission', 'Plan your week with Wise Planning, and use your Personal Care Log, so that what you learn becomes what you live.']
+      ['commission', 'Commission', 'Plan your week with Wise Planning, use your Personal Care Log, and submit your ministry reports, so that what you learn becomes what you live.']
     ];
     var STEP_LABEL = { welcome: 'Welcome', circles: 'Circles', checkin: 'Check-in', christ: 'CHRIST Stages', care: 'Care', course: 'Courses', calling: 'Calling', commission: 'Commission' };
+    /* Add to Home Screen */
+    var deferredInstall = null;
+    function isStandalone() { return (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone === true; }
+    function isIOS() { return /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); }
+    function isAndroid() { return /android/i.test(navigator.userAgent); }
+    window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); deferredInstall = e; });
+    window.addEventListener('appinstalled', function () { deferredInstall = null; say('5M was added to your Home Screen'); if ($('.step[aria-current="step"]') && $('.step[aria-current="step"]').dataset.step === 'welcome') renderWelcome(); });
+    function installHelpHtml() {
+      var steps;
+      if (isIOS()) steps = ['Tap the <strong>Share</strong> button (the square with an arrow) in Safari.', 'Scroll down and tap <strong>Add to Home Screen</strong>.', 'Tap <strong>Add</strong>. 5M will appear with your other apps.'];
+      else if (isAndroid()) steps = ['Tap the <strong>menu</strong> button (three dots) in your browser.', 'Tap <strong>Add to Home screen</strong> or <strong>Install app</strong>.', 'Confirm, and 5M will appear with your other apps.'];
+      else steps = ['In Chrome or Edge, click the <strong>install</strong> icon at the right end of the address bar, or open the browser menu and choose <strong>Install 5M</strong>.', 'In Safari on a Mac, choose <strong>File</strong>, then <strong>Add to Dock</strong>.', 'Some browsers, such as Firefox on a computer, do not support this. You can open 5M on your phone instead.'];
+      return '<strong>How to add 5M to your Home Screen</strong><ol>' + steps.map(function (t) { return '<li>' + t + '</li>'; }).join('') + '</ol>';
+    }
+    function addToHome() {
+      var help = $('#installHelp');
+      if (deferredInstall) {
+        var ev = deferredInstall; deferredInstall = null;
+        try {
+          ev.prompt();
+          Promise.resolve(ev.userChoice).then(function (c) { if (c && c.outcome === 'accepted') say('Adding 5M to your Home Screen\u2026'); else if (help) { help.innerHTML = installHelpHtml(); help.hidden = false; } });
+        } catch (err) { if (help) { help.innerHTML = installHelpHtml(); help.hidden = false; } }
+        return;
+      }
+      if (help) { help.innerHTML = installHelpHtml(); help.hidden = false; help.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+    }
     var elWelcome = $('#welcome');
     function renderWelcome() {
       var ms = MS.map(function (m, i) {
@@ -1040,6 +1071,11 @@
           '<p class="lead" style="font-size:16px">Take the Vision Seminar first, then come back and join a circle. If you are already part of RLCC, you can go straight to Circles.</p>' +
           '<div class="row" style="margin-top:14px"><a class="btn" href="' + esc(CONFIG.VISION_URL) + '" target="_blank" rel="noopener noreferrer">Join the Vision Seminar \u2197</a></div></div>' +
         '<div class="row" style="margin-top:18px"><button class="btn" data-go="circles">Begin with Circles \u2192</button>' + resume + '</div>' +
+        (isStandalone() ? '' :
+          '<div class="card w-install" style="margin-top:22px"><p class="eyebrow">Keep it close</p><h2>Add 5M to your Home Screen</h2>' +
+          '<p class="lead" style="font-size:16px">Put 5M on your phone like any other app, so it opens full screen and is always one tap away.</p>' +
+          '<div class="row" style="margin-top:12px"><button class="btn" id="installBtn" type="button">Add to Home Screen</button></div>' +
+          '<div class="w-help" id="installHelp" hidden></div></div>') +
         '<div class="card" style="margin-top:22px"><h2 style="font-size:24px;margin-bottom:14px">What the 5M stands for</h2><ul class="w-ms">' + ms + '</ul></div>' +
         '<div class="card" style="margin-top:16px"><h2 style="font-size:24px;margin-bottom:6px">How to use this app</h2>' +
           '<p class="note" style="margin-bottom:12px">Each step below is a tab. Tap any of them to open it.</p><ol class="w-how">' + how + '</ol></div>' +
@@ -1047,19 +1083,23 @@
           '<li>Go in order the first time, or jump to any step. You can come back to any of them at any time.</li>' +
           '<li>Your Check-in and CHRIST Stages answers stay on your own device. You can download them as PDFs to keep, or to share with a supervisor or coach.</li>' +
           '<li>Circles, Courses, Calling, Care, and Commission open right inside 5M. What you enter in them is saved by those tools.</li>' +
-          '<li>On a phone, tap the menu button at the top right to move between steps. To keep 5M like an app, use your browser\u2019s Add to Home Screen.</li>' +
+          '<li>On a phone, tap the menu button at the top right to move between steps. To keep 5M like an app, use the Add to Home Screen button above.</li>' +
         '</ul></div>' +
         '<div class="verse">\u201cGo ye therefore, and teach all nations \u2026 and, lo, I am with you alway, even unto the end of the world.\u201d<span>Matthew 28:19\u201320 (KJV)</span></div>';
     }
-    elWelcome.addEventListener('click', function (e) { var g = e.target.closest('[data-go]'); if (g) go(g.dataset.go); });
+    elWelcome.addEventListener('click', function (e) {
+      if (e.target.closest('#installBtn')) { addToHome(); return; }
+      var g = e.target.closest('[data-go]'); if (g) go(g.dataset.go);
+    });
 
     /* A pane that holds more than one tool (Commission: Wise Planning + Personal Care Log) */
-    function buildMultiPane(id, tools, next) {
+    function buildMultiPane(id, tools, next, extras) {
       var pane = $('#pane-' + id), list = [];
       pane.innerHTML =
         '<div class="tool"><div class="seg" role="group" aria-label="Tools">' +
           tools.map(function (t) { return '<button type="button" data-tool="' + esc(t.key) + '" aria-pressed="false">' + esc(t.label) + '</button>'; }).join('') +
-        '</div><a class="tbtn" data-open target="_blank" rel="noopener">Open in a new tab \u2197</a><button class="tbtn" data-act="reload">Reload</button><span class="sp"></span>' +
+        '</div><a class="tbtn" data-open target="_blank" rel="noopener">Open in a new tab \u2197</a><button class="tbtn" data-act="reload">Reload</button>' +
+        (extras || []).map(function (x) { return '<a class="tbtn extra" ' + openUrl(x.url) + '>' + esc(x.label) + ' \u2197</a>'; }).join('') + '<span class="sp"></span>' +
         (next ? '<button class="tbtn go" data-go="' + esc(next.step) + '">' + esc(next.label) + '</button>' : '') + '</div>' +
         '<div class="fwrap">' + tools.map(function (t) {
           return '<div class="fview" data-tool="' + esc(t.key) + '" hidden><div class="fstatus"><div class="spinner"></div><div data-t>Loading\u2026</div></div><iframe title="' + esc(t.label) + '"></iframe></div>';
@@ -1139,7 +1179,7 @@
         var ct = [];
         if (CONFIG.WISE_URL) ct.push({ key: 'wise', label: 'Wise Planning', url: CONFIG.WISE_URL });
         if (CONFIG.CARELOG_URL) ct.push({ key: 'carelog', label: 'Personal Care Log', url: CONFIG.CARELOG_URL });
-        if (ct.length) buildMultiPane('commission', ct); else buildFramePane('commission', '', null, '', 'Commission');
+        if (ct.length) buildMultiPane('commission', ct, null, CONFIG.REPORTS_URL ? [{ label: 'Reports', url: CONFIG.REPORTS_URL }] : []); else buildFramePane('commission', '', null, '', 'Commission');
       }
       if (!auto) {
         if (step !== 'checkin' && step !== 'christ') journey.visited[step] = true;
