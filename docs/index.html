@@ -605,15 +605,15 @@
         celebrate: 'You are serving with your gifts and with a generous heart. Keep your pace sustainable so you can serve for the long run.',
         practices: ['Name your spiritual gifts and serve where they fit', 'Pray for the people you serve by name', 'Give generously, including your tithe, as worship', 'Share the Gospel in ordinary conversations', 'Say no to one thing so that your yes can be wholehearted'],
         ministry: 'Serve or lead a team in an area that fits your gifts, and receive coaching as you go.' },
-      { code: 'I', name: 'Intimacy with Christ', short: 'Intimacy', color: '#b4654a',
-        desc: 'Drawing near to Christ through prayer, honesty, and rest.',
-        qs: ['I make room to be quiet with God and simply enjoy His presence, with no agenda.',
-             'I bring my honest feelings and unmet longings to God instead of hiding them.',
-             'I have at least one soul friend with whom I can be completely honest about my inner life.',
-             'I keep a regular rhythm of Sabbath rest, to receive from God and not only to serve Him.'],
+      { code: 'I', name: 'Inner Journey', short: 'Inner Journey', color: '#b4654a',
+        desc: 'Paying honest attention to your inner life with God: your emotions, needs, and desires.',
+        qs: ['I find myself wanting a closer, more personal friendship with Jesus and the Father, and I make room for it.',
+             'I take time to notice and work through my feelings, and the hurts from my past, and I bring them to God.',
+             'I have a soul friend who listens with empathy, and I can be honest with that person about my struggles.',
+             'When I slow down in silence or prayerful reading of Scripture, I become more aware of God\u2019s presence, or more hungry for it.'],
         roadblock: { name: 'Denying your emotions and needs', q: 'I tend to push down my feelings and needs, and I rarely stop to pay attention to my inner life.' },
-        empathy: 'You may be holding feelings or longings you have not yet had room to bring to God. As you slow down, some of it may feel uncomfortable, even while your desire for Him grows. God meets you in the honest places.',
-        celebrate: 'Your inner life is being nourished by honest, restful time with God and with trusted friends. Keep guarding that space.',
+        empathy: 'You may be holding feelings, hurts, or longings you have not yet had room to bring to God. As you slow down, some of it may feel uncomfortable, even while your desire for Him grows. God meets you in the honest places, and Psalm 139:23-24 is a good prayer for this season.',
+        celebrate: 'You are paying honest attention to your inner life, and bringing what you find to God and to trusted friends. Keep guarding that space. Psalm 139:23-24 is a good prayer to keep praying here.',
         practices: ['Pray the Psalms and let them give words to your real feelings', 'Build a soul friendship where you can be fully honest', 'Practice quiet prayer and slow, prayerful reading of Scripture (Lectio Divina)', 'Keep a weekly Sabbath and, at times, fast', 'Read a devotional classic slowly', 'Ask someone to pray with you for inner healing'],
         ministry: 'Care ministry, spiritual formation, or listening and counseling roles, so you can walk with others through their inner journeys.' },
       { code: 'S', name: 'Spirit-Led Ministry', short: 'Spirit-led', color: '#7a64a8',
@@ -769,6 +769,7 @@
           (last ? '<button class="btn ghost" id="csviewlast">View last results</button>' : '') + '</div>' +
           (last ? '<p class="note" style="margin-top:14px">Last check \u00b7 ' + esc(fmtDate(last.ts)) + ' \u2014 healthy in ' + csSummary(last).healthy + ' of 6 \u00b7 <button class="link" id="csclear">Clear saved results</button></p>' : '') +
           '<p class="note" style="margin-top:14px">Your answers stay on this device. You can download a PDF to keep, or to share with a supervisor or coach.</p>' +
+          '<p class="note" style="margin-top:8px">Based on the CHRIST Stages from <em>Journey of the Soul</em> by Bill and Kristi Gaultiere (Soul Shepherding). Growth is circular, not a ladder: you may revisit any dimension at any time, and that is not a failure.</p>' +
         '</div>';
     }
 
@@ -835,7 +836,7 @@
         '<div class="block card cs-wall" style="border-left-color:' + wallColor + '"><h2>The Wall</h2><p class="eyebrow" style="color:' + wallColor + '">' + esc(CS_WALL_LABEL[r.wallLevel]) + '</p>' + wallDetail + '</div>' +
         '<div class="block card"><h2>Questions to bring to a supervisor or coach</h2><ul>' + prompts + '</ul></div>' +
         '<div class="row" style="margin-top:22px"><button class="btn" id="cspdf">Download PDF</button><button class="btn" id="cstocare" style="background:#7a64a8">Continue to Care \u2192</button><button class="btn ghost" id="csretake">Retake</button></div>' +
-        '<p class="note" style="margin-top:16px">A reflective self-check, not a diagnosis. Based on the CHRIST Stages framework taught by Soul Shepherding; for their own free assessment, see soulshepherding.org.</p>';
+        '<p class="note" style="margin-top:16px">A reflective self-check, not a diagnosis. Based on the CHRIST Stages from Journey of the Soul by Bill and Kristi Gaultiere (Soul Shepherding). This is not their official questionnaire; for that and more resources, see journeyofthesoul.org.</p>';
       drawHex($('#hex'), 900, r, null); csState.result = r;
     }
     function csShow(page) {
@@ -925,6 +926,8 @@
         }
         y += 5; head('Questions to bring to a supervisor or coach'); y += 3;
         CS_PROMPTS.forEach(function (t) { para('-  ' + t, 10.5, 'normal', null, 1.5, 2); });
+
+        y += 4; para('About this assessment: this self-check draws on the CHRIST Stages framework from Journey of the Soul by Bill and Kristi Gaultiere (Soul Shepherding). It is not their official questionnaire and it is not a diagnosis. For their questionnaire and resources, see journeyofthesoul.org.', 9, 'italic', [102, 114, 106], 2);
 
         var n = doc.getNumberOfPages();
         for (var p = 1; p <= n; p++) {
