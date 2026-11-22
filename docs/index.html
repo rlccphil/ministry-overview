@@ -263,6 +263,7 @@
       CIRCLES_URL: 'https://rlccphil.github.io/circles/',
       JOURNAL_URL: 'https://voice-first-ai-journ-pukp.bolt.host/',
       PRACTICES_URL: 'https://rlccphil.github.io/nine-practices/',
+      METHOD_URL: '',   // RLCC Method app: paste its web address between the quotes and it appears before Pathway
       CIRCLE_TRAIN_URL: 'https://circle-group-leader-40cg.bolt.host/',
       TEAM_TRAIN_URL: 'https://ministry-team-leader-l82p.bolt.host/',
       SHEPHERD_URL: 'https://shepherding-ministry-bkvk.bolt.host/',
@@ -1184,6 +1185,7 @@
       if (step === 'course' && !frames.course) {
         var cu = [];
         if (CONFIG.PRACTICES_URL) cu.push({ key: 'practices', label: 'Nine Practices', url: CONFIG.PRACTICES_URL });
+        if (CONFIG.METHOD_URL) cu.push({ key: 'method', label: 'RLCC Method', url: CONFIG.METHOD_URL });
         if (CONFIG.LEARN_URL) cu.push({ key: 'pathway', label: 'Pathway', url: CONFIG.LEARN_URL });
         if (CONFIG.CIRCLE_TRAIN_URL) cu.push({ key: 'circletrain', label: 'Circle Group Leaders Training', url: CONFIG.CIRCLE_TRAIN_URL });
         if (CONFIG.TEAM_TRAIN_URL) cu.push({ key: 'teamtrain', label: 'Ministry Team Leaders Training', url: CONFIG.TEAM_TRAIN_URL });
