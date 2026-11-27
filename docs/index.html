@@ -267,6 +267,7 @@
       PRACTICES_URL: 'https://rlccphil.github.io/nine-practices/',
       METHOD_URL: 'https://rlccphil.github.io/rlcc-method/',
       HARVEST_URL: 'https://hub.rlcc.ph/harvest-workers-85574657',
+      MULTIPLY_URL: 'https://rlccphil.github.io/leadership-multiplication/',
       CIRCLE_TRAIN_URL: 'https://circle-group-leader-40cg.bolt.host/',
       TEAM_TRAIN_URL: 'https://ministry-team-leader-l82p.bolt.host/',
       SHEPHERD_URL: 'https://shepherding-ministry-bkvk.bolt.host/',
@@ -1196,6 +1197,7 @@
         if (CONFIG.LEARN_URL) cu.push({ key: 'pathway', label: 'Pathway', url: CONFIG.LEARN_URL });
         if (CONFIG.HARVEST_URL) cu.push({ key: 'harvest', label: 'Be a Harvest Worker', url: CONFIG.HARVEST_URL, external: true });
         if (CONFIG.CIRCLE_TRAIN_URL) cu.push({ key: 'circletrain', label: 'Circle Group Leaders Training', url: CONFIG.CIRCLE_TRAIN_URL });
+        if (CONFIG.MULTIPLY_URL) cu.push({ key: 'multiply', label: 'Leadership Multiplication', url: CONFIG.MULTIPLY_URL });
         if (CONFIG.TEAM_TRAIN_URL) cu.push({ key: 'teamtrain', label: 'Ministry Team Leaders Training', url: CONFIG.TEAM_TRAIN_URL });
         if (CONFIG.SHEPHERD_URL) cu.push({ key: 'shepherd', label: 'The Heart and Art of Shepherding', url: CONFIG.SHEPHERD_URL });
         if (cu.length) buildMultiPane('course', cu, { step: 'calling', label: 'Next: Calling \u2192' }); else buildFramePane('course', '', 'calling', 'Next: Calling \u2192', 'Courses');
